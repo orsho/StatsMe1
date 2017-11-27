@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         if(firebaseAuth.getCurrentUser() !=null){
             Intent i = new Intent(MainActivity.this, StartActivity.class);
             i.putExtra("Email",firebaseAuth.getCurrentUser().getEmail());
-            Log.i("wawa",firebaseAuth.getCurrentUser().getEmail().toString());
+            Log.i("wawaa",firebaseAuth.getCurrentUser().getEmail().toString());
             startActivity(i);
         }
 
