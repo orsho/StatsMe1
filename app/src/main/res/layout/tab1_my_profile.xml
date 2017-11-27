@@ -1,0 +1,146 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.orshoham.statsme.StartActivity$PlaceholderFragment">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:columnCount="2"
+        android:rowCount="8"
+        android:background="@color/color3"
+        android:layout_alignParentTop="true"
+        android:id="@+id/gridLayout">
+
+        <TextView
+            android:id="@+id/profile_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:layout_columnWeight="3"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="4dp"
+            android:textSize="17sp"
+            android:textColor="@color/color1"
+            android:text="@string/profileStats" />
+
+        <TextView
+            android:id="@+id/profile_stats1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:layout_columnWeight="2"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="30dp"
+            android:textColor="@color/color1"
+            android:text="NUM OF GAMES PLAYED:" />
+
+        <TextView
+            android:id="@+id/profile_stats2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:layout_columnWeight="2"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="30dp"
+            android:textColor="@color/color1"
+            android:text="NUM OF WINS:" />
+
+        <TextView
+            android:id="@+id/profile_stats3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="3"
+            android:layout_columnWeight="2"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="30dp"
+            android:textColor="@color/color1"
+            android:text="NUM OF LOSES:" />
+
+        <TextView
+            android:id="@+id/profile_stats4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="4"
+            android:layout_columnWeight="2"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="30dp"
+            android:textColor="@color/color1"
+            android:text="AVG WINNERS PG" />
+
+        <TextView
+            android:id="@+id/profile_stats5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="5"
+            android:layout_columnWeight="2"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="30dp"
+            android:textColor="@color/color1"
+            android:text="AVG UF PG:" />
+
+        <TextView
+            android:id="@+id/profile_stats6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="6"
+            android:layout_columnWeight="2"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="30dp"
+            android:textColor="@color/color1"
+            android:text="AVG ACES PG(your user):" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_pic"
+            android:layout_width="220dp"
+            android:layout_height="170dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:layout_rowSpan="7"
+            android:layout_columnWeight="-0.2"
+            android:paddingBottom="20dp"
+            android:layout_marginLeft="15dp"
+            app:civ_border_color="#FFFFFF"
+            app:civ_border_width="2dp"
+            app:srcCompat="@drawable/profile_empty" />
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/section_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/gamesListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/gridLayout"
+        android:background="@color/color5" />
+
+    <TextView
+        android:id="@+id/initialText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="15sp"
+        android:layout_below="@+id/gridLayout"/>
+
+</RelativeLayout>

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "887748431054",
+    "firebase_url": "https://statsme-7257.firebaseio.com",
+    "project_id": "statsme-7257",
+    "storage_bucket": "statsme-7257.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887748431054:android:8bfea2ee13a95181",
+        "android_client_info": {
+          "package_name": "com.orshoham.statsme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887748431054-8k0qbhje1tdrdf4uo9pc98qfqh575odp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwg0J6zYNRI0oyFV7BHFtp2CS0k3HjjC0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color3">
+
+    <GridLayout
+        android:id="@+id/gridLayoutGame"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/color3"
+        android:columnCount="3"
+        android:padding="4dp"
+        android:rowCount="3"
+        app:layout_constraintBottom_toTopOf="@+id/gridLayoutScore"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/MyprofileImage"
+            android:layout_width="106dp"
+            android:layout_height="100dp"
+            android:layout_column="0"
+            android:layout_columnWeight="0.2"
+            android:layout_row="0"
+            app:srcCompat="@drawable/profile_empty" />
+
+        <TextView
+            android:id="@+id/textVs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            android:text="vs"
+            android:textSize="50sp" />
+
+        <ImageView
+            android:id="@+id/RivalprofileImage"
+            android:layout_width="106dp"
+            android:layout_height="100dp"
+            android:layout_column="2"
+            android:layout_columnWeight="0.2"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            app:srcCompat="@drawable/profile_empty" />
+
+        <TextView
+            android:id="@+id/myScoreId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_gravity="center"
+            android:layout_row="1"
+            android:gravity="center"
+            android:text="YOU 0" />
+
+        <TextView
+            android:id="@+id/totalScoreId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="center"
+            android:layout_marginRight="3dp"
+            android:layout_row="1"
+            android:text="0:0"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/rivalScoreId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_gravity="center"
+            android:layout_row="1"
+            android:text="RIVAL 0" />
+
+        <TextView
+            android:id="@+id/timeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="2"
+            android:text="MATCH TIME:" />
+
+        <Chronometer
+            android:id="@+id/timeCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="10dp"
+            android:layout_row="2" />
+
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayoutScore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="4dp"
+        android:background="@color/color3"
+        android:columnCount="3"
+        android:paddingTop="10dp"
+        android:rowCount="10"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayoutGame">
+
+        <TextView
+            android:id="@+id/myAcesId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_row="0"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myDoubleFaultsId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="1"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myServeInId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="2"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myFirstServeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="3"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/mySecondServeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="4"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myWinnerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="5"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myForcedId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="6"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myUnforcedId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="7"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myNetId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="8"
+            android:gravity="center"
+            android:text="0/0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/myBreaksId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="9"
+            android:gravity="center"
+            android:text="0/0"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/acesId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_row="0"
+            android:gravity="center"
+            android:text="ACES"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/doubleFaultsId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="1"
+            android:gravity="center"
+            android:text="DOUBLE FAULTS"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/stServeInId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="2"
+            android:gravity="center"
+            android:text="1st SERVE IN%"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/stServeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="3"
+            android:gravity="center"
+            android:text="1st SERVE WON%"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/ndServeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="4"
+            android:gravity="center"
+            android:text="2nd SERVE WON%"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/winnersId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="5"
+            android:gravity="center"
+            android:text="WINNERS (5/8)"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/forcedId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="6"
+            android:gravity="center"
+            android:text="F ERRORS (6/9)"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/unForcedId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="7"
+            android:gravity="center"
+            android:text="UN F ERRORS (7/11)"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/netId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="8"
+            android:gravity="center"
+            android:text="NET POINTS WON"
+            android:textColor="#000000"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/breaksId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="9"
+            android:gravity="center"
+            android:text="BREAK POINTS WON"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalAcesId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_row="0"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalDoubleFaultsId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="1"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalServeInId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="2"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalFirstServeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="3"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalSecondServeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="4"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalWinnerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="5"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalForcedId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="6"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalUnforcedId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="7"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#1D6598"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalNetId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="8"
+            android:gravity="center"
+            android:text="0/0"
+            android:textColor="#686A5C"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/rivalBreakId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="7sp"
+            android:layout_row="9"
+            android:gravity="center"
+            android:text="0/0"
+            android:textSize="17sp" />
+
+    </GridLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/color3"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayoutScore">
+
+        <Button
+            android:id="@+id/btnPlayGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:onClick="startGame"
+            android:text="PLAY" />
+
+        <Button
+            android:id="@+id/btnEndGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:onClick="stop"
+            android:text="END GAME" />
+
+        <Button
+            android:id="@+id/btnBT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:text="BLUETOOTH" />
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
