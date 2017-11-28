@@ -35,7 +35,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
 
     public void startGame (View view) {
-        Log.i(TAG, "app started");
+        Log.i(TAG, "app startedd");
         FirebaseGame.getSpeechCountByWord();
         speechRecognizer();
     }
