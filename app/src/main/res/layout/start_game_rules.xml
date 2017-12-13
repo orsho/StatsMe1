@@ -108,7 +108,7 @@
             android:layout_width="300dp"
             android:layout_height="55dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="320dp"
+            android:layout_marginTop="321dp"
             android:background="@drawable/buttonshapestartgame"
             android:onClick="startGameLive"
             android:text="GO!"
