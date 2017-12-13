@@ -107,11 +107,13 @@
             android:id="@+id/startButtonId"
             android:layout_width="300dp"
             android:layout_height="55dp"
-            android:layout_marginTop="40dp"
             android:layout_marginLeft="50dp"
-            android:onClick="startGameLive"
+            android:layout_marginTop="320dp"
             android:background="@drawable/buttonshapestartgame"
-            android:text="GO!" />
+            android:onClick="startGameLive"
+            android:text="GO!"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
     </LinearLayout>
 
 </RelativeLayout>
