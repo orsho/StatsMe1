@@ -33,16 +33,42 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     private Intent intent;
     boolean flag = true;
 
+    private Chronometer myTimeCount;
+    private long lastPause;
+    private int playPause = 1;
+    private Button mStartButton;
+    private Button mStopButton;
+    private Button mPauseButton;
 
     public void startGame (View view) {
-        Log.i(TAG, "app startedd");
-        FirebaseGame.getSpeechCountByWord();
+        this.flag = true;
+        Log.i(TAG, "app started");
+        // start measure match time
+        if (lastPause != 0){
+            myTimeCount.setBase(myTimeCount.getBase() + SystemClock.elapsedRealtime() - lastPause);
+        }
+        else{
+            myTimeCount.setBase(SystemClock.elapsedRealtime());
+        }
+        myTimeCount.start();
+
         speechRecognizer();
     }
 
-    public void stop (View view) {
+    public void pauseGame (View view) {
+        this.flag = false;
+        Log.i(TAG, "app paused");
+        lastPause = SystemClock.elapsedRealtime();
+        myTimeCount.stop();
+    }
+
+    public void stopGame (View view) {
         this.flag = false;
         Log.i(TAG, "flag false");
+        // stop measure match time
+        myTimeCount.stop();
+        myTimeCount.setBase(SystemClock.elapsedRealtime());
+        lastPause = 0;
     }
 
     public void speechRecognizer() {
@@ -134,6 +160,32 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_live);
+
+        myTimeCount = (Chronometer) findViewById(R.id.timeCount);
+        mStartButton = (Button) findViewById(R.id.btnPlayGame);
+        mPauseButton = (Button) findViewById(R.id.btnPauseGame);
+        mStopButton = (Button) findViewById(R.id.btnEndGame);
+
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               startGame(view);
+            }
+        });
+
+        mPauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pauseGame(view);
+            }
+        });
+
+        mStopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopGame(view);
+            }
+        });
 
 
 
