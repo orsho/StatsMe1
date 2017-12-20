@@ -1,17 +1,24 @@
 package com.orshoham.statsme;
-
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.support.v4.app.FragmentManager;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
@@ -20,8 +27,11 @@ import android.os.SystemClock;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,39 +46,92 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     private Chronometer myTimeCount;
     private long lastPause;
     private int playPause = 1;
-    private Button mStartButton;
+    private ImageButton mStartButton;
+    private ImageButton mPauseButton;
     private Button mStopButton;
-    private Button mPauseButton;
+    Boolean playIsOn = false;
+
+    ImageView userImageProfileView;
+    ImageView rivalImageProfileView;
+
+    TennisScoreCalculates calc;
+    TextView myScore;
+    TextView rivalScore;
+    TextView totalScoreSet;
+
 
     public void startGame (View view) {
-        this.flag = true;
-        Log.i(TAG, "app started");
-        // start measure match time
-        if (lastPause != 0){
-            myTimeCount.setBase(myTimeCount.getBase() + SystemClock.elapsedRealtime() - lastPause);
-        }
-        else{
-            myTimeCount.setBase(SystemClock.elapsedRealtime());
-        }
-        myTimeCount.start();
+        if (playIsOn == false){
+            playIsOn = true;
+            mStartButton.setEnabled(false);
+            mStartButton.setVisibility(Button.GONE);
+            mPauseButton.setEnabled(true);
+            mPauseButton.setVisibility(Button.VISIBLE);
+            this.flag = true;
+            Log.i(TAG, "app started");
+            // start measure match time
+            if (lastPause != 0){
+                myTimeCount.setBase(myTimeCount.getBase() + SystemClock.elapsedRealtime() - lastPause);
+            }
+            else{
+                myTimeCount.setBase(SystemClock.elapsedRealtime());
+            }
+            myTimeCount.start();
 
-        speechRecognizer();
+            speechRecognizer();
+        }
     }
 
     public void pauseGame (View view) {
-        this.flag = false;
-        Log.i(TAG, "app paused");
-        lastPause = SystemClock.elapsedRealtime();
-        myTimeCount.stop();
+        if (playIsOn == true) {
+            playIsOn = false;
+            mStartButton.setEnabled(true);
+            mStartButton.setVisibility(Button.VISIBLE);
+            mPauseButton.setEnabled(false);
+            mPauseButton.setVisibility(Button.GONE);
+            onTotalDestroy();
+            Log.i(TAG, "app paused");
+            lastPause = SystemClock.elapsedRealtime();
+            myTimeCount.stop();
+        }
+
     }
 
     public void stopGame (View view) {
         this.flag = false;
         Log.i(TAG, "flag false");
         // stop measure match time
+        lastPause = SystemClock.elapsedRealtime();
         myTimeCount.stop();
-        myTimeCount.setBase(SystemClock.elapsedRealtime());
-        lastPause = 0;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to quit the match?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void declareWin(String winLose){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("You "+winLose)
+                .setCancelable(false)
+                .setPositiveButton("Back To Menu", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public void speechRecognizer() {
@@ -157,14 +220,47 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         // Log.i(TAG, "on rms changed");
     }
 
+    public void savePhoto() {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference userIdRef = rootRef.child("Users").child(uid).child("UserDetails");
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String imageurl = dataSnapshot.child("imageurl").getValue(String.class);
+                String userid = dataSnapshot.child("userid").getValue(String.class);
+                Log.d("TAG", imageurl + " / " + userid);
+
+                Tab1MyProfile.ImageDownloader task = new Tab1MyProfile.ImageDownloader();
+                Bitmap myImage;
+
+                try {
+                    myImage = task.execute(imageurl).get();
+                    userImageProfileView.setImageBitmap(myImage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        userIdRef.addListenerForSingleValueEvent(eventListener);
+
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_live);
 
         myTimeCount = (Chronometer) findViewById(R.id.timeCount);
-        mStartButton = (Button) findViewById(R.id.btnPlayGame);
-        mPauseButton = (Button) findViewById(R.id.btnPauseGame);
+        mStartButton = (ImageButton) findViewById(R.id.btnPlayGame);
+        mPauseButton = (ImageButton) findViewById(R.id.btnPauseGame);
         mStopButton = (Button) findViewById(R.id.btnEndGame);
+
+        //user cannot see pause button (only see it after play button is pressed)
+        mPauseButton.setEnabled(false);
+        mPauseButton.setVisibility(Button.GONE);
 
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +280,44 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             @Override
             public void onClick(View view) {
                 stopGame(view);
+            }
+        });
+
+        //declare profile pictures
+        userImageProfileView = (ImageView) findViewById(R.id.MyprofileImage);
+        savePhoto();
+        rivalImageProfileView = (ImageView) findViewById(R.id.RivalprofileImage);
+
+        myScore = (TextView) findViewById(R.id.myScoreId);
+        rivalScore = (TextView) findViewById(R.id.rivalScoreId);
+        totalScoreSet = (TextView) findViewById(R.id.totalScoreSetId);
+
+        //test for score method
+        calc = new TennisScoreCalculates();
+        userImageProfileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calc.addMyPoint();
+                myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
+                rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
+                totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
+                if(calc.checkWin() == true){
+                    declareWin("won!! congratulations!");
+                }
+
+            }
+        });
+
+        rivalImageProfileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calc.addRivalPoint();
+                rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
+                myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
+                totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
+                if(calc.checkWin() == true){
+                    declareWin("Lost.. maybe next time");
+                }
             }
         });
 
