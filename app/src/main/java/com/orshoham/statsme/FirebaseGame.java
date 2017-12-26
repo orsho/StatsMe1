@@ -13,6 +13,14 @@ import com.google.firebase.database.ValueEventListener;
 public class FirebaseGame {
     static FirebaseAuth mAuth;
     static DatabaseReference mref;
+    static String userID = UserDetails.getUserId();
+
+    static int countWords = 0;
+
+    static int countGames = 0;
+    static int countPoints = 0;
+    static int countMypoints = 0;
+    static int countRivalPoints = 0;
 
     //make connection with firebase database
     static void connectDatabase() {
@@ -21,7 +29,6 @@ public class FirebaseGame {
 
     static void createNewGame(){
         connectDatabase();
-        final String userID = UserDetails.getUserId();
 
         //add game to user total games played
         UserDetails.addGameToUser();
@@ -31,8 +38,6 @@ public class FirebaseGame {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.i("numgames", snapshot.getValue().toString());
-                mref.child("Users/"+userID+"/Games/Game"+snapshot.getValue()+"/MyWinners").setValue("1");
-                mref.child("Users/"+userID+"/Games/Game"+snapshot.getValue()+"/MyUF").setValue("3");
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -40,45 +45,58 @@ public class FirebaseGame {
         });
 
     }
-/*
-    public String getNumberOfGames() {
-        final String userID = connectDatabase();
+
+    //add to firebase game point for the user (sort by set->game->game score->game point)
+    static void addMyGamePointFirebase(final int countSets, final int myGameScore, final int myGamePoint){
+            mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                            "/setNum"+Integer.toString(countSets)+
+                            "/Game"+Integer.toString(countGames)+
+                            "/"+Integer.toString(countPoints)+" totalGamePoint "+
+                            Integer.toString(myGameScore)+" MyGameScore "+
+                            Integer.toString(myGamePoint)+" myGamePoint")
+                            .setValue(Integer.toString(myGamePoint));
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        countPoints++;
+        countMypoints++;
+    }
+
+    //add to firebase game point for the rival (sort by set->game->game score->game point)
+    static void addRivalGamePointFirebase(final int countSets, final int rivalGameScore, final int rivalGamePoint){
         mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.i("numgames", snapshot.getValue().toString());
-                String numGame = snapshot.getValue().toString();
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/setNum"+Integer.toString(countSets)+
+                        "/Game"+Integer.toString(countGames)+
+                        "/"+Integer.toString(countPoints)+" totalGamePoint "+
+                        Integer.toString(rivalGameScore)+" rivalGameScore "+
+                        Integer.toString(rivalGamePoint)+" myGamePoint")
+                        .setValue(Integer.toString(rivalGamePoint));
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        return numGame;
-    }*/
+        countPoints++;
+        countRivalPoints++;
+    }
 
-    static void getSpeechCountByWord() {
-        final String userID = UserDetails.getUserId();
-
-        mref.child("Users/" + userID + "/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+    //add number of times there is myWinner in a specific set
+    static void addMyWinnersFirebase (final int countSets, final int countMyWinners){
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.i("numgamesWhichIsGoingOn", snapshot.getValue().toString());
-                mref.child("Users/" + userID + "/Games/Game" + snapshot.getValue()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot gameSnapshot) {
-                        for (DataSnapshot childSnapshot : gameSnapshot.getChildren()) {
-                            Log.i("Value in game", childSnapshot.getValue(String.class));
-                            Log.i("from", childSnapshot.toString());
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/setNum"+Integer.toString(countSets)+
+                        "/numMyWinners").setValue(Integer.toString(countMyWinners));
             }
 
             @Override
@@ -86,4 +104,80 @@ public class FirebaseGame {
             }
         });
     }
+
+    static void addMyForcedFirebase (final int countSets, final int countMyForced){
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/setNum"+Integer.toString(countSets)+
+                        "/numMyForced").setValue(Integer.toString(countMyForced));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    static void addMyUNForcedFirebase (final int countSets, final int countMyUNForced){
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/setNum"+Integer.toString(countSets)+
+                        "/numMyUNForced").setValue(Integer.toString(countMyUNForced));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    static void addRivalWinnersFirebase (final int countSets, final int countRivalWinners){
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/setNum"+Integer.toString(countSets)+
+                        "/numRivalWinners").setValue(Integer.toString(countRivalWinners));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    static void addRivalForcedFirebase (final int countSets, final int countRivalForced){
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/setNum"+Integer.toString(countSets)+
+                        "/numRivalForced").setValue(Integer.toString(countRivalForced));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    static void addRivalUNForcedFirebase (final int countSets, final int countRivalUNForced){
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/setNum"+Integer.toString(countSets)+
+                        "/numRivalUNForced").setValue(Integer.toString(countRivalUNForced));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
 }

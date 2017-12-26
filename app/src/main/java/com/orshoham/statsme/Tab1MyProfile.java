@@ -118,7 +118,7 @@ public class Tab1MyProfile extends Fragment  {
     }
 
 
-    public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
+    public static class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
         @Override
         protected Bitmap doInBackground(String... urls) {
@@ -208,6 +208,8 @@ public class Tab1MyProfile extends Fragment  {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab1_my_profile, container, false);
 
+
+
         //define profile image
         userImageProfileView = (ImageView) rootView.findViewById(R.id.profile_pic);
 
@@ -247,11 +249,6 @@ public class Tab1MyProfile extends Fragment  {
             firstUserDetails.userFirstTimeApp();
             Log.i("app run first time?", "yes!!");
         }
-
-
-
-
-
 
             //get permission to gallery
         rootView.findViewById(R.id.profile_pic).setOnClickListener(new View.OnClickListener() {

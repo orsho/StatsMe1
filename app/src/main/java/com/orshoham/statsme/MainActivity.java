@@ -1,5 +1,7 @@
 package com.orshoham.statsme;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,8 +26,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        username = (EditText) findViewById(R.id.usernameID);
+        username = (AutoCompleteTextView) findViewById(R.id.usernameID);
         password = (EditText) findViewById(R.id.passwordID);
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -99,3 +105,17 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 }
+
+   /* private void addAdapterToViews() {
+
+        Account[] accounts = AccountManager.get(this).getAccounts();
+        Set<String> emailSet = new HashSet<String>();
+        for (Account account : accounts) {
+            if (username.matcher(account.name).matches()) {
+                emailSet.add(account.name);
+            }
+
+        }
+        auto_mail.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>(emailSet)));
+
+    }*/

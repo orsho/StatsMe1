@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/MyprofileImage"
             android:layout_width="106dp"
             android:layout_height="100dp"
@@ -61,7 +61,7 @@
             android:text="YOU 0" />
 
         <TextView
-            android:id="@+id/totalScoreId"
+            android:id="@+id/totalScoreSetId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
@@ -503,6 +503,8 @@
             android:text="0/0"
             android:textSize="17sp" />
 
+
+
     </GridLayout>
 
     <LinearLayout
@@ -513,34 +515,47 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gridLayoutScore">
 
-        <Button
-            android:id="@+id/btnPlayGame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:onClick="startGame"
-            android:text="PLAY" />
 
+        <ImageButton
+            android:id="@+id/btnPlayGame"
+            android:layout_width="110dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="70dp"
+            android:onClick="start"
+            android:background="@color/color3"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/play"/>
+
+        <ImageButton
+            android:id="@+id/btnPauseGame"
+            android:layout_width="110dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="70dp"
+            android:onClick="pause"
+            android:background="@color/color3"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/pause" />
+
+        <!--you will see this button on the app because pause button status is gone!-->
         <Button
             android:id="@+id/btnEndGame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="60dp"
+            android:background="#ff7070"
+            android:textColor="#FFFFFF"
             android:onClick="stop"
-            android:text="END GAME" />
+            android:text="END  GAME" />
 
-        <Button
-            android:id="@+id/btnBT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:text="BLUETOOTH" />
     </LinearLayout>
 
 

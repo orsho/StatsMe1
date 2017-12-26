@@ -43,6 +43,9 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     private Intent intent;
     boolean flag = true;
 
+    //create db in SQLite by Class DBHandler
+    DBHandler db = new DBHandler(this);
+
     private Chronometer myTimeCount;
     private long lastPause;
     private int playPause = 1;
@@ -61,6 +64,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
 
     public void startGame (View view) {
+        //check if play or pause
         if (playIsOn == false){
             playIsOn = true;
             mStartButton.setEnabled(false);
@@ -69,13 +73,16 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             mPauseButton.setVisibility(Button.VISIBLE);
             this.flag = true;
             Log.i(TAG, "app started");
-            // start measure match time
+            //not the first time button play is pressed
             if (lastPause != 0){
                 myTimeCount.setBase(myTimeCount.getBase() + SystemClock.elapsedRealtime() - lastPause);
             }
+            //first timein the game button play is pressed
             else{
                 myTimeCount.setBase(SystemClock.elapsedRealtime());
+                gamePoints();
             }
+            // start measure match time
             myTimeCount.start();
 
             speechRecognizer();
@@ -109,6 +116,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        db.deleteDb();
                         finish();
                     }
                 })
@@ -200,8 +208,11 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         for (String result:matches)
             s += result + "\n";
 
-        Log.i(TAG,"resuls: "+ matches.get(0));
+        Log.i(TAG,"results: "+ matches.get(0));
         Toast.makeText(GameLive.this, s, Toast.LENGTH_SHORT).show();
+        //add this s result(speech) to db data base in SQLite
+        db.addRecord(new Speech(s));
+        gamePoints();
         speech.startListening(intent);
     }
 
@@ -247,6 +258,71 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         };
         userIdRef.addListenerForSingleValueEvent(eventListener);
 
+    }
+
+    public void gamePoints() {
+        gameMyWinners();
+        gameMyForced();
+        gameMyUnforced();
+        gameRivalWinners();
+        gameRivalForced();
+        gameRivalUnforced();
+    }
+
+    //check if the word five (equal to my winner) is called. if yes, show this to the user and add this to TennisScorecalculates class)
+    public void gameMyWinners(){
+        String myWinner = "five";
+        //check if there is a row in SQLite db that LIKE "five". If yes, count it.
+        int speechCountsMyWinners = db.getSpeechCountByWord(myWinner);
+        TextView myWinnerViewId = (TextView)findViewById(R.id.myWinnerId);
+        //show to the user the number of times there is five in SQLite db
+        myWinnerViewId.setText(Integer.toString(speechCountsMyWinners));
+        //add the number of times there is five in the db to cala class (TennisScoreCalculates)
+        calc.addMyWinners(speechCountsMyWinners);
+    }
+
+    public void gameMyForced() {
+        String myForced = "six";
+        int speechCountsMyForced = db.getSpeechCountByWord(myForced);
+        TextView myForcedViewId = (TextView)findViewById(R.id.myForcedId);
+        myForcedViewId.setText(Integer.toString(speechCountsMyForced));
+        calc.addMyForced(speechCountsMyForced);
+
+    }
+
+    public void gameMyUnforced(){
+        String myUnforced = "seven";
+        int speechCountsMyUnforced = db.getSpeechCountByWord(myUnforced);
+        TextView myUnforcedViewId = (TextView)findViewById(R.id.myUnforcedId);
+        myUnforcedViewId.setText(Integer.toString(speechCountsMyUnforced));
+        calc.addMyUNForced(speechCountsMyUnforced);
+
+    }
+
+    public void gameRivalWinners(){
+        String rivalWinner = "eight";
+        int speechCountsRivalWinners = db.getSpeechCountByWord(rivalWinner);
+        TextView rivalWinnerViewId = (TextView)findViewById(R.id.rivalWinnerId);
+        rivalWinnerViewId.setText(Integer.toString(speechCountsRivalWinners));
+        calc.addRivalWinners(speechCountsRivalWinners);
+
+    }
+
+    public void gameRivalForced(){
+        String rivalForced = "nine";
+        int speechCountsRivalForced = db.getSpeechCountByWord(rivalForced);
+        TextView rivalForcedViewId = (TextView)findViewById(R.id.rivalForcedId);
+        rivalForcedViewId.setText(Integer.toString(speechCountsRivalForced));
+        calc.addRivalForced(speechCountsRivalForced);
+
+    }
+
+    public void gameRivalUnforced(){
+        String rivalUnforced = "eleven";
+        int speechCountsRivalUnforced = db.getSpeechCountByWord(rivalUnforced);
+        TextView rivalUnforcedViewId = (TextView)findViewById(R.id.rivalUnforcedId);
+        rivalUnforcedViewId.setText(Integer.toString(speechCountsRivalUnforced));
+        calc.addRivalUNForced(speechCountsRivalUnforced);
     }
 
     public void onCreate(Bundle savedInstanceState) {

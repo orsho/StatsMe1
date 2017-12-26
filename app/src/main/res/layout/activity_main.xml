@@ -12,7 +12,7 @@
     android:background="#F8F9EB"
     tools:context="com.orshoham.statsme.MainActivity">
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/usernameID"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -23,7 +23,7 @@
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="5"
-        android:text="START GAME"
+        android:text="START MATCH"
         android:textColor="#FFFFFF"
         android:textSize="30sp" />
 
