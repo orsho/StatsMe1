@@ -62,6 +62,12 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     TextView rivalScore;
     TextView totalScoreSet;
 
+    TextView myWinnerViewId;
+    TextView myForcedViewId;
+    TextView myUnforcedViewId;
+    TextView rivalWinnerViewId;
+    TextView rivalForcedViewId;
+    TextView rivalUnforcedViewId;
 
     public void startGame (View view) {
         //check if play or pause
@@ -80,7 +86,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             //first timein the game button play is pressed
             else{
                 myTimeCount.setBase(SystemClock.elapsedRealtime());
-                gamePoints();
+                calc.zeroAllStatsInFirebase();
             }
             // start measure match time
             myTimeCount.start();
@@ -212,7 +218,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         Toast.makeText(GameLive.this, s, Toast.LENGTH_SHORT).show();
         //add this s result(speech) to db data base in SQLite
         db.addRecord(new Speech(s));
-        gamePoints();
+        gamePoints(s);
         speech.startListening(intent);
     }
 
@@ -260,16 +266,36 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
     }
 
-    public void gamePoints() {
-        gameMyWinners();
-        gameMyForced();
-        gameMyUnforced();
-        gameRivalWinners();
-        gameRivalForced();
-        gameRivalUnforced();
+    public void gamePoints(String s) {
+        if (s.contains("five")){
+            myWinnerViewId.setText(Integer.toString(calc.addMyWinners()));
+            updateMyScore();
+        }
+        if (s.contains("six")){
+            myForcedViewId.setText(Integer.toString(calc.addMyForced()));
+            updateRivalScore();
+        }
+        if (s.contains("seven")){
+            myUnforcedViewId.setText(Integer.toString(calc.addMyUNForced()));
+            updateRivalScore();
+        }
+        if (s.contains("eight")){
+            rivalWinnerViewId.setText(Integer.toString(calc.addRivalWinners()));
+            updateRivalScore();
+        }
+        if (s.contains("nine")){
+            rivalForcedViewId.setText(Integer.toString(calc.addRivalForced()));
+            updateMyScore();
+        }
+        if (s.contains("eleven")){
+            rivalUnforcedViewId.setText(Integer.toString(calc.addRivalUNForced()));
+            updateMyScore();
+        }
     }
 
     //check if the word five (equal to my winner) is called. if yes, show this to the user and add this to TennisScorecalculates class)
+
+    /*
     public void gameMyWinners(){
         String myWinner = "five";
         //check if there is a row in SQLite db that LIKE "five". If yes, count it.
@@ -280,6 +306,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         //add the number of times there is five in the db to cala class (TennisScoreCalculates)
         calc.addMyWinners(speechCountsMyWinners);
     }
+
 
     public void gameMyForced() {
         String myForced = "six";
@@ -323,6 +350,26 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         TextView rivalUnforcedViewId = (TextView)findViewById(R.id.rivalUnforcedId);
         rivalUnforcedViewId.setText(Integer.toString(speechCountsRivalUnforced));
         calc.addRivalUNForced(speechCountsRivalUnforced);
+    }*/
+
+    public void updateMyScore(){
+        calc.addMyPoint();
+        myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
+        rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
+        totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
+        if(calc.checkWin() == true){
+            declareWin("won!! congratulations!");
+        }
+    }
+
+    public void updateRivalScore(){
+        calc.addRivalPoint();
+        myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
+        rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
+        totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
+        if(calc.checkWin() == true){
+            declareWin("Lost.. maybe next time");
+        }
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -368,32 +415,26 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         rivalScore = (TextView) findViewById(R.id.rivalScoreId);
         totalScoreSet = (TextView) findViewById(R.id.totalScoreSetId);
 
+        myWinnerViewId = (TextView)findViewById(R.id.myWinnerId);
+        myForcedViewId = (TextView)findViewById(R.id.myForcedId);
+        myUnforcedViewId = (TextView)findViewById(R.id.myUnforcedId);
+        rivalWinnerViewId = (TextView)findViewById(R.id.rivalWinnerId);
+        rivalForcedViewId = (TextView)findViewById(R.id.rivalForcedId);
+        rivalUnforcedViewId = (TextView)findViewById(R.id.rivalUnforcedId);
+
         //test for score method
         calc = new TennisScoreCalculates();
         userImageProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calc.addMyPoint();
-                myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
-                rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
-                totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
-                if(calc.checkWin() == true){
-                    declareWin("won!! congratulations!");
-                }
-
+                updateMyScore();
             }
         });
 
         rivalImageProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calc.addRivalPoint();
-                rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
-                myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
-                totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
-                if(calc.checkWin() == true){
-                    declareWin("Lost.. maybe next time");
-                }
+                updateRivalScore();
             }
         });
 

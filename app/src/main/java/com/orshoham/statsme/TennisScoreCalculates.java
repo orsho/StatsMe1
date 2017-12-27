@@ -2,8 +2,6 @@ package com.orshoham.statsme;
 
 import android.util.Log;
 
-import static com.orshoham.statsme.FirebaseGame.countGames;
-
 public class TennisScoreCalculates {
 
     int myGamePoint = 0;
@@ -13,6 +11,8 @@ public class TennisScoreCalculates {
     int[] myGameScore = {0, 0, 0, 0, 0};
     int[] rivalGameScore = {0, 0, 0, 0, 0};
     int countSets = 1;
+    int countGames=0;
+    int countPoints=0;
     boolean tieBreakFlag = false;
 
     int countMyWinners = 0;
@@ -64,6 +64,7 @@ public class TennisScoreCalculates {
 
 
     public void addMyPoint() {
+        countPoints++;
         if (tieBreakFlag == false){
             if (myGamePoint == 0){
                 myGamePoint = 15;
@@ -117,6 +118,7 @@ public class TennisScoreCalculates {
     }
 
     public void addRivalPoint() {
+        countPoints++;
         if (tieBreakFlag == false){
             if (rivalGamePoint == 0){
                 rivalGamePoint = 15;
@@ -219,6 +221,45 @@ public class TennisScoreCalculates {
         }
     }
 
+
+    //count number of my winners, add it to Firebase and return it to the screen (GAME LIVE)
+    public int addMyWinners(){
+        countMyWinners++;
+        FirebaseGame.addMyWinnersFirebase(countSets, countMyWinners);
+        return countMyWinners;
+    }
+
+    public int addMyForced(){
+        countMyForced++;
+        FirebaseGame.addMyForcedFirebase(countSets, countMyForced);
+        return countMyForced;
+    }
+
+    public int addMyUNForced(){
+        countMyUNForced++;
+        FirebaseGame.addMyUNForcedFirebase(countSets, countMyUNForced);
+        return countMyUNForced;
+    }
+
+    public int addRivalWinners(){
+        countRivalWinners++;
+        FirebaseGame.addRivalWinnersFirebase(countSets, countRivalWinners);
+        return countRivalWinners;
+    }
+
+    public int addRivalForced(){
+        countRivalForced++;
+        FirebaseGame.addRivalForcedFirebase(countSets, countRivalForced);
+        return countRivalForced;
+    }
+
+    public int addRivalUNForced(){
+        countRivalUNForced++;
+        FirebaseGame.addMyUNForcedFirebase(countSets, countRivalUNForced);
+        return countRivalUNForced;
+    }
+
+    /*
     //upload the number of times there is five (myWinner) in SQLite to Firebase by sets
     public void addMyWinners(int sqlCountMyWinners){
         countMyWinners = sqlCountMyWinners;
@@ -248,7 +289,7 @@ public class TennisScoreCalculates {
     public void addRivalUNForced(int sqlCountRivalUNForced){
         countRivalUNForced = sqlCountRivalUNForced;
         FirebaseGame.addRivalUNForcedFirebase(countSets, countRivalUNForced);
-    }
+    }*/
 
     public boolean checkWin(){
         boolean flagCheckWin = false;
@@ -263,9 +304,21 @@ public class TennisScoreCalculates {
 
     public void uploadPoint (boolean myPoint){
         if (myPoint == true){
-            FirebaseGame.addMyGamePointFirebase(countSets, myGameScore[countSets], myGamePoint);
+            FirebaseGame.addMyGamePointFirebase(countSets,countGames,countPoints, myGameScore[countSets], myGamePoint);
         } else {
-            FirebaseGame.addRivalGamePointFirebase(countSets, rivalGameScore[countSets], rivalGamePoint);
+            FirebaseGame.addRivalGamePointFirebase(countSets,countGames, countPoints, rivalGameScore[countSets], rivalGamePoint);
+        }
+    }
+
+    public void zeroAllStatsInFirebase(){
+        for (int i=1;i<=3;i++){
+            FirebaseGame.addMyWinnersFirebase(i, 0);
+            FirebaseGame.addMyForcedFirebase(i, 0);
+            FirebaseGame.addMyUNForcedFirebase(i, 0);
+            FirebaseGame.addRivalWinnersFirebase(i, 0);
+            FirebaseGame.addRivalForcedFirebase(i, 0);
+            FirebaseGame.addRivalUNForcedFirebase(i, 0);
+
         }
     }
 

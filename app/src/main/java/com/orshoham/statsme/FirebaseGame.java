@@ -15,13 +15,6 @@ public class FirebaseGame {
     static DatabaseReference mref;
     static String userID = UserDetails.getUserId();
 
-    static int countWords = 0;
-
-    static int countGames = 0;
-    static int countPoints = 0;
-    static int countMypoints = 0;
-    static int countRivalPoints = 0;
-
     //make connection with firebase database
     static void connectDatabase() {
         mref = FirebaseDatabase.getInstance().getReference();
@@ -47,10 +40,11 @@ public class FirebaseGame {
     }
 
     //add to firebase game point for the user (sort by set->game->game score->game point)
-    static void addMyGamePointFirebase(final int countSets, final int myGameScore, final int myGamePoint){
+    static void addMyGamePointFirebase(final int countSets,final int countGames, final int countPoints, final int myGameScore, final int myGamePoint){
             mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
+                    Log.i("gameNum", Integer.toString(countGames));
                     mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
                             "/setNum"+Integer.toString(countSets)+
                             "/Game"+Integer.toString(countGames)+
@@ -63,12 +57,10 @@ public class FirebaseGame {
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
-        countPoints++;
-        countMypoints++;
     }
 
     //add to firebase game point for the rival (sort by set->game->game score->game point)
-    static void addRivalGamePointFirebase(final int countSets, final int rivalGameScore, final int rivalGamePoint){
+    static void addRivalGamePointFirebase(final int countSets,final int countGames, final int countPoints, final int rivalGameScore, final int rivalGamePoint){
         mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -85,8 +77,6 @@ public class FirebaseGame {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        countPoints++;
-        countRivalPoints++;
     }
 
     //add number of times there is myWinner in a specific set
