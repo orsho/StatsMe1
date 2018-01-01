@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -62,6 +63,8 @@ import java.util.ArrayList;
 import static android.R.attr.name;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
+import static com.orshoham.statsme.FirebaseGame.userID;
+import static com.orshoham.statsme.UserDetails.mref;
 
 
 public class Tab1MyProfile extends Fragment  {
@@ -70,7 +73,7 @@ public class Tab1MyProfile extends Fragment  {
     ImageView userImageProfileView;
 
     //var for the list of games
-    ListView gamesListView;
+    static ListView gamesListView;
     ArrayList<String> games = new ArrayList<>();
 
     private StorageReference mStorageRef;
@@ -78,6 +81,8 @@ public class Tab1MyProfile extends Fragment  {
     private FirebaseAuth mAuth;
 
     private SharedPreference sharedPreferenceFirstTime;
+
+    static TextView gamesPlayed;
 
     public void getPhoto(){
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -203,20 +208,85 @@ public class Tab1MyProfile extends Fragment  {
 
     }
 
+    //show number of games played
+    static void showMainStats (){
+        DatabaseReference mref = FirebaseDatabase.getInstance().getReference();
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                gamesPlayed.setText("NUM OF GAMES PLAYED : "+(String)snapshot.getValue());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    static void showGameList(final ArrayList<String>  gamesPlayedList){
+        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference()
+                .child("Users/"+userID+"/UserDetails/NumOfGamesPlayed");
+        ref1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot snapshot) {
+                String gamesPlayed = (String) snapshot.getValue();
+                for(int i=0; i<gamesPlayedList.size(); i++) {
+                    try {
+                        if(!(gamesPlayedList.get(i) == null)) {
+                            Log.i("TAG","delete array"+gamesPlayedList.get(i));
+                            gamesPlayedList.remove(i);
+                        } else {
+                            Log.i("array","cooooo");
+                        }
+                    }
+                    catch(NullPointerException npe) {
+                        Log.i("array","doooo");
+                    }
+                }
+                for (int countMatchFirebase = 168; countMatchFirebase <= Integer.parseInt(gamesPlayed); countMatchFirebase++) {
+                    Log.i("TAG", "game num is "+snapshot.getValue());
+                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference()
+                            .child("Users/"+userID+"/Matches/Match" + countMatchFirebase + "/mainResults");
+                    ref2.addValueEventListener(new ValueEventListener() {
+                        int countMatchGame = 1;
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot2) {
+                            String check = (String) snapshot2.child("mySetCount").getValue();
+                            Log.i("TAG", "my set number is "+check);
+                            Log.i("TAG", "game num is inside 2 "+snapshot.getValue());
+                            if (check != null && !check.trim().isEmpty()){
+                                gamesPlayedList.add("Game Number " +countMatchGame+ ", Sets: "+snapshot2.child("mySetCount").getValue()+":"+ snapshot2.child("rivalSetCount").getValue());
+                                //Log.i("what", "this"+snapshot2.child("rivalSetCount").getValue());
+                                Log.i("TAG","count Match Game "+ Integer.toString(countMatchGame));
+                                Log.i("TAG", "game num is inside 2 "+snapshot.getValue());
+                                countMatchGame++;
+                            }
+                        }
+
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            //handle databaseError
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError2) {
+            }
+
+        });
+    }
+
         @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab1_my_profile, container, false);
 
-
-
-        //define profile image
-        userImageProfileView = (ImageView) rootView.findViewById(R.id.profile_pic);
-
-        //this is just for me for knowing which user is logged
-        userEmail = (TextView) rootView.findViewById(R.id.profile_stats6);
-
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String userID = user.getUid();
+
+
 
             //check if user is not logged in
         if(mAuth.getCurrentUser() == null){
@@ -224,22 +294,17 @@ public class Tab1MyProfile extends Fragment  {
             startActivity(intent);
         }
 
-        //insert user var the Email of the current user (if user logged in)
-        FirebaseUser user = mAuth.getCurrentUser();
-        String userID = user.getUid();
-        userEmail.setText("AVG ACES PG(your user):" + user.getEmail());
-
         //FIREBASE DATABASE INSTANCE
         mUserDatabse = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        //insert the user Email and num of games into firebase database
+        //insert the user Email into firebase database
         mUserDatabse = FirebaseDatabase.getInstance().getReference();
         mUserDatabse.child("Users/"+userID+"/UserDetails/UserName").setValue(mAuth.getCurrentUser().getEmail());
 
         //check if the user is in the app for the first time
         sharedPreferenceFirstTime=new SharedPreference(getActivity());
-        //sharedPreferenceFirstTime.setApp_runFirst("FIRST");
+        //sharedPreferenceFirstTime.setApp_runFirst("FIRST"); erase // if its the first time
         if(sharedPreferenceFirstTime.getApp_runFirst().equals("FIRST"))
         {
             // That's mean First Time Launch
@@ -268,16 +333,34 @@ public class Tab1MyProfile extends Fragment  {
         //show the photo that the user uploaded. show it every oncreate
         savePhoto();
 
+        //define profile image
+        userImageProfileView = (ImageView) rootView.findViewById(R.id.profile_pic);
+
+        //define main stats and show them by function
+        gamesPlayed = (TextView) rootView.findViewById(R.id.gamesPlayedId);
+        showMainStats();
+
         //define the games list view
         gamesListView = (ListView) rootView.findViewById(R.id.gamesListView);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, games);
+        ArrayList<String> gamesPlayedList = new ArrayList<>();
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList);
         gamesListView.setAdapter(arrayAdapter);
+
+        showGameList(gamesPlayedList);
+
+        /*
+        gamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), GameStats.class);
+                intent.putExtra("gameId", gameId.get(i));
+                startActivity(intent);
+            }
+        });*/
 
         //initial text before games have played
         TextView initialText = (TextView) rootView.findViewById(R.id.initialText);
         initialText.setText("You have not played any games yet");
-
-
 
         return rootView;
     }

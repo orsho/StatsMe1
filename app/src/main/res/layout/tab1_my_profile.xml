@@ -32,7 +32,7 @@
             android:text="@string/profileStats" />
 
         <TextView
-            android:id="@+id/profile_stats1"
+            android:id="@+id/gamesPlayedId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
@@ -101,7 +101,7 @@
             android:layout_marginTop="3dp"
             android:paddingLeft="30dp"
             android:textColor="@color/color1"
-            android:text="AVG ACES PG(your user):" />
+            android:text="AVG ACES PG:" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic"

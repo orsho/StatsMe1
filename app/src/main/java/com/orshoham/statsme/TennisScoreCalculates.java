@@ -308,6 +308,7 @@ public class TennisScoreCalculates {
         } else {
             FirebaseGame.addRivalGamePointFirebase(countSets,countGames, countPoints, rivalGameScore[countSets], rivalGamePoint);
         }
+        FirebaseGame.updateFinalResults(mySetScore,rivalSetScore);
     }
 
     public void zeroAllStatsInFirebase(){

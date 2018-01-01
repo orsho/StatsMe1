@@ -30,7 +30,6 @@ public class FirebaseGame {
         mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.i("numgames", snapshot.getValue().toString());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -44,7 +43,6 @@ public class FirebaseGame {
             mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    Log.i("gameNum", Integer.toString(countGames));
                     mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
                             "/setNum"+Integer.toString(countSets)+
                             "/Game"+Integer.toString(countGames)+
@@ -168,6 +166,25 @@ public class FirebaseGame {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    static void updateFinalResults (final int myCountSets, final int rivalCountSets){
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/mainResults/mySetCount").setValue(Integer.toString(myCountSets));
+                mref.child("Users/"+userID+"/Matches/Match"+snapshot.getValue()+
+                        "/mainResults/rivalSetCount").setValue(Integer.toString(rivalCountSets));
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
     }
 
 }
