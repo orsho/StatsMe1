@@ -45,6 +45,9 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
     //create db in SQLite by Class DBHandler
     DBHandler db = new DBHandler(this);
+    DBGames dbGames = new DBGames(this);
+
+
 
     private Chronometer myTimeCount;
     private long lastPause;
@@ -83,7 +86,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             if (lastPause != 0){
                 myTimeCount.setBase(myTimeCount.getBase() + SystemClock.elapsedRealtime() - lastPause);
             }
-            //first timein the game button play is pressed
+            //first time in the game button play is pressed
             else{
                 myTimeCount.setBase(SystemClock.elapsedRealtime());
                 calc.zeroAllStatsInFirebase();
@@ -122,6 +125,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        dbGames.addMyWinners(new GamesSQL(calc.updateGameSQL()));
+                        dbGames.getAllGames();
                         db.deleteDb();
                         finish();
                     }
@@ -388,7 +393,12 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+               FirebaseGame game = new FirebaseGame();
+               game.createNewGame();
                startGame(view);
+
+
+
             }
         });
 

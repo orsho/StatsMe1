@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,9 @@ public class Tab2StartGame extends Fragment {
 
             @Override
             public void onClick(View v) {
-                FirebaseGame.createNewGame();
+                //FirebaseGame game = new FirebaseGame();
+                //game.createNewGame();
+                Log.i("user", "has clicked on Tab2 start game");
                 Intent intent = new Intent(getActivity(), GameLive.class);
                 startActivity(intent);
             }

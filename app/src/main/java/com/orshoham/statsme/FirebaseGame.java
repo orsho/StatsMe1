@@ -1,5 +1,6 @@
 package com.orshoham.statsme;
 
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,21 +11,31 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class FirebaseGame {
+public class FirebaseGame extends AppCompatActivity {
     static FirebaseAuth mAuth;
     static DatabaseReference mref;
-    static String userID = UserDetails.getUserId();
+    static String userID = getUserId();
+
+
 
     //make connection with firebase database
-    static void connectDatabase() {
+    public void connectDatabase() {
         mref = FirebaseDatabase.getInstance().getReference();
+        Log.i("conected to", "Firebase Database");
     }
 
-    static void createNewGame(){
+    static String getUserId() {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String userID = user.getUid();
+        return userID;
+    }
+
+   public void createNewGame(){
         connectDatabase();
 
         //add game to user total games played
-        UserDetails.addGameToUser();
+        addGameToUser();
 
         //create a new game in the user database
         mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
@@ -36,6 +47,32 @@ public class FirebaseGame {
             }
         });
 
+    }
+    public void userFirstTimeApp(){
+        connectDatabase();
+        String userID = getUserId();
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").setValue("0");
+
+    }
+
+    public void addGameToUser(){
+        final String userID = getUserId();
+        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                String countToString = snapshot.getValue().toString();
+                int countToInt = Integer.parseInt(countToString);
+                countToInt++;
+                String countToStringAgain = Integer.toString(countToInt);
+                mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").setValue(countToStringAgain);
+                Log.i("numGames in Firebase", countToStringAgain);
+                //GamesSQL oneGame = new GamesSQL(countToInt);
+                //Log.i("numGame in GameSQl", Integer.toString(oneGame.getGamesNumber()));
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     //add to firebase game point for the user (sort by set->game->game score->game point)

@@ -64,7 +64,6 @@ import static android.R.attr.name;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 import static com.orshoham.statsme.FirebaseGame.userID;
-import static com.orshoham.statsme.UserDetails.mref;
 
 
 public class Tab1MyProfile extends Fragment  {
@@ -222,6 +221,7 @@ public class Tab1MyProfile extends Fragment  {
         });
     }
 
+    /*
     static void showGameList(final ArrayList<String>  gamesPlayedList){
         DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference()
                 .child("Users/"+userID+"/UserDetails/NumOfGamesPlayed");
@@ -276,6 +276,7 @@ public class Tab1MyProfile extends Fragment  {
 
         });
     }
+    */
 
         @Nullable
     @Override
@@ -346,7 +347,7 @@ public class Tab1MyProfile extends Fragment  {
         ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList);
         gamesListView.setAdapter(arrayAdapter);
 
-        showGameList(gamesPlayedList);
+        //showGameList(gamesPlayedList);
 
         /*
         gamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

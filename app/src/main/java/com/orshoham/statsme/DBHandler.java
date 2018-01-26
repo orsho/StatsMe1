@@ -1,14 +1,10 @@
 package com.orshoham.statsme;
 
-import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +15,12 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "speechData";
-    // Contacts table name
-    private static final String DATABASE_SPEECH = "speech";
-    // Shops Table Columns names
-    public static final String KEY_ID = "id";
+    // speech table name
+    private static final String TABLE_SPEECH = "speech";
+    // speech Table Columns names
+    public static final String KEY_ID_SPEECH = "id";
     public static final String KEY_RECORD = "record";
+
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,18 +28,20 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i("createDB=", "Table?");
-        String sql = "CREATE TABLE " + DATABASE_SPEECH + " (" + KEY_ID
-                + "  INTEGER PRIMARY KEY , " + KEY_RECORD + " TEXT " + ");";
+        Log.i("createDB=", "Table speech");
+        String sql = "CREATE TABLE " + TABLE_SPEECH
+                + " ("
+                + KEY_ID_SPEECH + "  INTEGER PRIMARY KEY,"
+                + KEY_RECORD + " TEXT "
+                + ");";
         Log.i("createDB=", sql);
         db.execSQL(sql);
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase speechData, int oldVersion, int newVersion) {
 // Drop older table if existed
-        speechData.execSQL("DROP TABLE IF EXISTS " + DATABASE_SPEECH);
+        speechData.execSQL("DROP TABLE IF EXISTS " + TABLE_SPEECH);
 // Creating tables again
         onCreate(speechData);
     }
@@ -54,7 +53,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(KEY_RECORD, record.getRecord()); // record
         // Inserting Row
         Log.i("what the text", record.getRecord());
-        db.insert(DATABASE_SPEECH, null, values);
+        db.insert(TABLE_SPEECH, null, values);
         db.close(); // Closing database connection
     }
 
@@ -62,7 +61,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public List<Speech> getAllSpeech() {
         List<Speech> speechList = new ArrayList<Speech>();
 // Select All Query
-        String selectQuery = "SELECT * FROM " + DATABASE_SPEECH;
+        String selectQuery = "SELECT * FROM " + TABLE_SPEECH;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 // looping through all rows and adding to list
@@ -96,7 +95,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void deleteDb() {
         SQLiteDatabase db = this.getWritableDatabase(); //get database
-        db.execSQL("DELETE FROM " + DATABASE_SPEECH); //delete all rows in a table
+        db.execSQL("DELETE FROM " + TABLE_SPEECH); //delete all rows in a table
         db.close();
     }
 

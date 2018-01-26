@@ -1,5 +1,6 @@
 package com.orshoham.statsme;
 
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,12 +11,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class UserDetails {
-    static FirebaseAuth mAuth;
-    static DatabaseReference mref;
+public class UserDetails extends AppCompatActivity {
+    public FirebaseAuth mAuth;
+    public DatabaseReference mref;
 
+    DBGames db = new DBGames(this);
 
-    static String getUserId() {
+    public String getUserId() {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         final String userID = user.getUid();
@@ -23,7 +25,7 @@ public class UserDetails {
     }
 
     //make connection with firebase database
-    static void connectDatabase() {
+    public void connectDatabase() {
         mref = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -34,24 +36,7 @@ public class UserDetails {
 
     }
 
-    public static void addGameToUser(){
-        connectDatabase();
-        final String userID = getUserId();
-        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                String countToString = snapshot.getValue().toString();
-                int countToInt = Integer.parseInt(countToString);
-                countToInt++;
-                String countToStringAgain = Integer.toString(countToInt);
-                mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").setValue(countToStringAgain);
-                Log.i("numgames", snapshot.getValue().toString());
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
+
 
 
 }

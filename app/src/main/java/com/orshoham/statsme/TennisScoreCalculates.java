@@ -1,6 +1,8 @@
 package com.orshoham.statsme;
-
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+
 
 public class TennisScoreCalculates {
 
@@ -21,6 +23,8 @@ public class TennisScoreCalculates {
     int countRivalWinners = 0;
     int countRivalForced = 0;
     int countRivalUNForced = 0;
+
+    //DBGames dbGame = new DBGames(this);
 
     public int getMyGamePoint(){
         return myGamePoint;
@@ -319,8 +323,19 @@ public class TennisScoreCalculates {
             FirebaseGame.addRivalWinnersFirebase(i, 0);
             FirebaseGame.addRivalForcedFirebase(i, 0);
             FirebaseGame.addRivalUNForcedFirebase(i, 0);
-
         }
+    }
+
+    public int updateGameSQL()
+    {
+        GamesSQL game = new GamesSQL(0);
+        game.setMySet1(myGameScore[0]);
+        game.setMyWinners(getMyWinners());
+        int mySet1 = game.getMySet1();
+        int myWinners = game.getMyWinners();
+        Log.i("myWinnersGameSQL Is", Integer.toString(myWinners));
+        return (myWinners);
+
     }
 
 }
