@@ -12,6 +12,12 @@ public class StatsTab1 extends Tab1MyProfile {
     private int sumWins=0;
     private int sumLoss=0;
 
+    public int numOfGamesPlayed (DBGames dbGames){
+        List<GamesSQL> gameList = dbGames.getAllGames();
+        return gameList.size();
+
+    }
+
     public int checkSumWins (DBGames dbGames){
         List<GamesSQL> gameList = dbGames.getSpecificRowsByWhereEquals("win_or_loss", 1);
 

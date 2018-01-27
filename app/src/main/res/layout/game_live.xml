@@ -554,7 +554,7 @@
             android:background="#ff7070"
             android:textColor="#FFFFFF"
             android:onClick="stop"
-            android:text="END  GAME" />
+            android:text="QUIT  GAME" />
 
     </LinearLayout>
 

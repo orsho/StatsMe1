@@ -121,7 +121,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         myTimeCount.stop();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to quit the match?")
+        builder.setMessage("Do you want to save the game?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -132,6 +132,11 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNeutralButton("Back to game", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

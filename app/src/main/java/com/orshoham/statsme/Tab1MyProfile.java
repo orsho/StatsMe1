@@ -82,7 +82,7 @@ public class Tab1MyProfile extends Fragment  {
 
     private SharedPreference sharedPreferenceFirstTime;
 
-    static TextView gamesPlayedView;
+    private TextView gamesPlayedView;
     private TextView numberOfWinsView;
     private TextView avgWinnersView;
     private TextView avgUNForcedView;
@@ -213,20 +213,6 @@ public class Tab1MyProfile extends Fragment  {
 
     }
 
-    //show number of games played
-    static void numOfGamesPlayed (){
-        DatabaseReference mref = FirebaseDatabase.getInstance().getReference();
-        mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                gamesPlayedView.setText("NUM OF GAMES PLAYED : "+(String)snapshot.getValue());
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
     public void showGameList(ArrayList<String> gamesPlayedList){
         //create "gameList" which include all Games SQL Database
         List<GamesSQL> gameList = dbGames.getAllGames();
@@ -334,7 +320,7 @@ public class Tab1MyProfile extends Fragment  {
         //define main stats and show them by functions
         StatsTab1 mainStats = new StatsTab1();
         gamesPlayedView = (TextView) rootView.findViewById(R.id.gamesPlayedId);
-        numOfGamesPlayed();
+        gamesPlayedView.setText("NUM OF GAMES PLAYED: "+ Integer.toString(mainStats.numOfGamesPlayed(dbGames)));
         numberOfWinsView = (TextView) rootView.findViewById(R.id.profile_stats2);
         numberOfWinsView.setText("NUM OF WINS: "+ Integer.toString(mainStats.checkSumWins(dbGames)));
         numberOfWinsView = (TextView) rootView.findViewById(R.id.profile_stats3);
