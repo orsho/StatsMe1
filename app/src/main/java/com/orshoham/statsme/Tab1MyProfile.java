@@ -59,6 +59,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.R.attr.name;
 import static android.app.Activity.RESULT_OK;
@@ -81,7 +82,12 @@ public class Tab1MyProfile extends Fragment  {
 
     private SharedPreference sharedPreferenceFirstTime;
 
-    static TextView gamesPlayed;
+    static TextView gamesPlayedView;
+    private TextView numberOfWinsView;
+    private TextView avgWinnersView;
+    private TextView avgUNForcedView;
+
+    DBGames dbGames;
 
     public void getPhoto(){
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -208,12 +214,12 @@ public class Tab1MyProfile extends Fragment  {
     }
 
     //show number of games played
-    static void showMainStats (){
+    static void numOfGamesPlayed (){
         DatabaseReference mref = FirebaseDatabase.getInstance().getReference();
         mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                gamesPlayed.setText("NUM OF GAMES PLAYED : "+(String)snapshot.getValue());
+                gamesPlayedView.setText("NUM OF GAMES PLAYED : "+(String)snapshot.getValue());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -221,62 +227,31 @@ public class Tab1MyProfile extends Fragment  {
         });
     }
 
-    /*
-    static void showGameList(final ArrayList<String>  gamesPlayedList){
-        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference()
-                .child("Users/"+userID+"/UserDetails/NumOfGamesPlayed");
-        ref1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot snapshot) {
-                String gamesPlayed = (String) snapshot.getValue();
-                for(int i=0; i<gamesPlayedList.size(); i++) {
-                    try {
-                        if(!(gamesPlayedList.get(i) == null)) {
-                            Log.i("TAG","delete array"+gamesPlayedList.get(i));
-                            gamesPlayedList.remove(i);
-                        } else {
-                            Log.i("array","cooooo");
-                        }
-                    }
-                    catch(NullPointerException npe) {
-                        Log.i("array","doooo");
-                    }
-                }
-                for (int countMatchFirebase = 168; countMatchFirebase <= Integer.parseInt(gamesPlayed); countMatchFirebase++) {
-                    Log.i("TAG", "game num is "+snapshot.getValue());
-                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference()
-                            .child("Users/"+userID+"/Matches/Match" + countMatchFirebase + "/mainResults");
-                    ref2.addValueEventListener(new ValueEventListener() {
-                        int countMatchGame = 1;
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot2) {
-                            String check = (String) snapshot2.child("mySetCount").getValue();
-                            Log.i("TAG", "my set number is "+check);
-                            Log.i("TAG", "game num is inside 2 "+snapshot.getValue());
-                            if (check != null && !check.trim().isEmpty()){
-                                gamesPlayedList.add("Game Number " +countMatchGame+ ", Sets: "+snapshot2.child("mySetCount").getValue()+":"+ snapshot2.child("rivalSetCount").getValue());
-                                //Log.i("what", "this"+snapshot2.child("rivalSetCount").getValue());
-                                Log.i("TAG","count Match Game "+ Integer.toString(countMatchGame));
-                                Log.i("TAG", "game num is inside 2 "+snapshot.getValue());
-                                countMatchGame++;
-                            }
-                        }
-
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            //handle databaseError
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError2) {
-            }
-
-        });
+    public void showGameList(ArrayList<String> gamesPlayedList){
+        //create "gameList" which include all Games SQL Database
+        List<GamesSQL> gameList = dbGames.getAllGames();
+        //show the database ID by showing "gameList Id" and add to view of this activity
+        for(int i=0;i<gameList.size();i++){
+            Log.i("myset3(TAB1)", Integer.toString(gameList.get(i).getMySet3()));
+            gamesPlayedList.add("Game Number " + Integer.toString(gameList.get(i).getId()) + " final Score: "
+                    +Integer.toString(gameList.get(i).getMySet1())+":"
+                    +Integer.toString(gameList.get(i).getRivalSet1())+", "
+                    +Integer.toString(gameList.get(i).getMySet2())+":"
+                    +Integer.toString(gameList.get(i).getRivalSet2())+", "
+                    +Integer.toString(gameList.get(i).getMySet3())+":"
+                    +Integer.toString(gameList.get(i).getRivalSet3())
+            );
+        }
     }
-    */
+
+    /*
+    public void updateListGames(){
+        ArrayList<String> gamesPlayedList = new ArrayList<>();
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList);
+        gamesListView.setAdapter(arrayAdapter);
+        dbGames = new DBGames(getActivity());
+        showGameList(gamesPlayedList);
+    }*/
 
         @Nullable
     @Override
@@ -337,17 +312,14 @@ public class Tab1MyProfile extends Fragment  {
         //define profile image
         userImageProfileView = (ImageView) rootView.findViewById(R.id.profile_pic);
 
-        //define main stats and show them by function
-        gamesPlayed = (TextView) rootView.findViewById(R.id.gamesPlayedId);
-        showMainStats();
-
         //define the games list view
         gamesListView = (ListView) rootView.findViewById(R.id.gamesListView);
         ArrayList<String> gamesPlayedList = new ArrayList<>();
         ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList);
         gamesListView.setAdapter(arrayAdapter);
-
-        //showGameList(gamesPlayedList);
+        //declare the database in thid activity
+        dbGames = new DBGames(getActivity());
+        showGameList(gamesPlayedList);
 
         /*
         gamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -359,9 +331,31 @@ public class Tab1MyProfile extends Fragment  {
             }
         });*/
 
+        //define main stats and show them by functions
+        StatsTab1 mainStats = new StatsTab1();
+        gamesPlayedView = (TextView) rootView.findViewById(R.id.gamesPlayedId);
+        numOfGamesPlayed();
+        numberOfWinsView = (TextView) rootView.findViewById(R.id.profile_stats2);
+        numberOfWinsView.setText("NUM OF WINS: "+ Integer.toString(mainStats.checkSumWins(dbGames)));
+        numberOfWinsView = (TextView) rootView.findViewById(R.id.profile_stats3);
+        numberOfWinsView.setText("NUM OF LOSSES: "+ Integer.toString(mainStats.checkSumLosses(dbGames)));
+        avgWinnersView = (TextView) rootView.findViewById(R.id.profile_stats4);
+        avgWinnersView.setText("AVG WINNERS PG: "+ Double.toString(mainStats.avgWinnersPG(dbGames)));
+        Log.i("avg winners", Double.toString(mainStats.avgWinnersPG(dbGames)));
+        avgUNForcedView = (TextView) rootView.findViewById(R.id.profile_stats5);
+        avgUNForcedView.setText("AVG UF PG: "+ Double.toString(mainStats.avgUNForcedPG(dbGames)));
+
+
+
+
+
         //initial text before games have played
         TextView initialText = (TextView) rootView.findViewById(R.id.initialText);
         initialText.setText("You have not played any games yet");
+        //check if the DB games isnt null. if it isn't then make the last row disappear
+        if(dbGames.checkTableGamesNotEmpty()){
+            initialText.setVisibility(View.GONE);
+        }
 
         return rootView;
     }

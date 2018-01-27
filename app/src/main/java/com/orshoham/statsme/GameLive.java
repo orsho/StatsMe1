@@ -125,8 +125,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dbGames.addMyWinners(new GamesSQL(calc.updateGameSQL()));
-                        dbGames.getAllGames();
+                        dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL()));
+                        //Tab1MyProfile updateGameList = new Tab1MyProfile();
                         db.deleteDb();
                         finish();
                     }
@@ -146,6 +146,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 .setCancelable(false)
                 .setPositiveButton("Back To Menu", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL()));
+                        db.deleteDb();
                         finish();
                     }
                 });

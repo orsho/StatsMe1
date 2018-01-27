@@ -24,7 +24,7 @@ public class TennisScoreCalculates {
     int countRivalForced = 0;
     int countRivalUNForced = 0;
 
-    //DBGames dbGame = new DBGames(this);
+    int winOrLoss = 3;
 
     public int getMyGamePoint(){
         return myGamePoint;
@@ -64,6 +64,10 @@ public class TennisScoreCalculates {
 
     public int getRivalUNForced(){
         return countRivalUNForced;
+    }
+
+    public int getWinOrLoss(){
+        return winOrLoss;
     }
 
 
@@ -299,9 +303,11 @@ public class TennisScoreCalculates {
         boolean flagCheckWin = false;
         if (mySetScore == 2){
             flagCheckWin = true;
+            winOrLoss = 1;
         }
         if (rivalSetScore == 2){
             flagCheckWin = true;
+            winOrLoss = 2;
         }
         return flagCheckWin;
     }
@@ -326,15 +332,38 @@ public class TennisScoreCalculates {
         }
     }
 
-    public int updateGameSQL()
+    public int[] updateGameSQL()
     {
-        GamesSQL game = new GamesSQL(0);
-        game.setMySet1(myGameScore[0]);
+        GamesSQL game = new GamesSQL();
+        game.setMySet1(myGameScore[1]);
+        game.setRivalSet1(rivalGameScore[1]);
+        game.setMySet2(myGameScore[2]);
+        game.setRivalSet2(rivalGameScore[2]);
+        game.setMySet3(myGameScore[3]);
+        game.setRivalSet3(rivalGameScore[3]);
         game.setMyWinners(getMyWinners());
-        int mySet1 = game.getMySet1();
-        int myWinners = game.getMyWinners();
-        Log.i("myWinnersGameSQL Is", Integer.toString(myWinners));
-        return (myWinners);
+        game.setMyForced(getMyForced());
+        game.setMyUNForced(getMyUNForced());
+        game.setRivalWinners(getRivalWinners());
+        game.setRivalForced(getRivalForced());
+        game.setRivalUNForced(getRivalUNForced());
+        game.setWinOrLoss(getWinOrLoss());
+        int oneGame[] = new int[13];
+        oneGame[0] = game.getMySet1();
+        oneGame[1] = game.getRivalSet1();
+        oneGame[2] = game.getMySet2();
+        oneGame[3] = game.getRivalSet2();
+        oneGame[4] = game.getMySet3();
+        oneGame[5] = game.getRivalSet3();
+        oneGame[6] = game.getMyWinners();
+        oneGame[7] = game.getMyForced();
+        oneGame[8] = game.getMyUNForced();
+        oneGame[9] = game.getRivalWinners();
+        oneGame[10] = game.getRivalForced();
+        oneGame[11] = game.getRivalUNForced();
+        oneGame[12] = game.getWinOrLoss();
+
+        return oneGame;
 
     }
 
