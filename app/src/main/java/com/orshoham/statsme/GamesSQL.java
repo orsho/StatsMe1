@@ -5,6 +5,7 @@ import android.util.Log;
 public class GamesSQL {
 
     private int id;
+    private int gameNumber;
     private int mySet1;
     private int rivalSet1;
     private int mySet2;
@@ -25,12 +26,12 @@ public class GamesSQL {
     {*/
     public GamesSQL(int[] oneGame){
         this.id=id;
+        this.gameNumber=0;
         this.mySet1=oneGame[0];
         this.rivalSet1=oneGame[1];
         this.mySet2=oneGame[2];
         this.rivalSet2=oneGame[3];
         this.mySet3=oneGame[4];
-        Log.i("myset3(GAMESSQL)", Integer.toString(mySet3));
         this.rivalSet3=oneGame[5];
         this.myWinners=oneGame[6];
         this.myForced=oneGame[7];
@@ -38,7 +39,7 @@ public class GamesSQL {
         this.rivalWinners=oneGame[9];
         this.rivalForced=oneGame[10];
         this.rivalUNForced=oneGame[11];
-        this.winOrLoss=oneGame[12];
+        this.winOrLoss=oneGame[11];
     }
 
     public GamesSQL() {
@@ -47,6 +48,10 @@ public class GamesSQL {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setGameNumber(int gameNumber) {
+        this.gameNumber=gameNumber;
     }
 
     public void setMySet1(int mySet1) {
@@ -104,6 +109,10 @@ public class GamesSQL {
 
     public int getId() {
         return id;
+    }
+
+    public int getGameNumber(){
+        return gameNumber;
     }
 
     public int getMySet1() {

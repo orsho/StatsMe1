@@ -1,6 +1,7 @@
 package com.orshoham.statsme;
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -126,7 +127,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL()));
-                        //Tab1MyProfile updateGameList = new Tab1MyProfile();
+                        //Tab1MyProfile tab1 = new Tab1MyProfile();
+                        //tab1.update();
                         db.deleteDb();
                         finish();
                     }

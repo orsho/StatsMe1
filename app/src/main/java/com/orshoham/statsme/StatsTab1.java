@@ -47,7 +47,9 @@ public class StatsTab1 extends Tab1MyProfile {
         for(int i=0;i<gameList.size();i++){
             sumWinners=sumWinners+gameList.get(i).getMyWinners();
         }
-        avgWinners=(Math.round(1.0 *sumWinners)/(gameList.size()));
+        if (sumWinners>0){
+            avgWinners=(Math.round(1.0 *sumWinners)/(gameList.size()));
+        }
         return avgWinners;
 
     }
@@ -58,8 +60,28 @@ public class StatsTab1 extends Tab1MyProfile {
         for(int i=0;i<gameList.size();i++){
             sumUNForced=sumUNForced+gameList.get(i).getMyUNForced();
         }
-        avgUNForced=(1.0 * sumUNForced/(gameList.size()));
+        if (sumUNForced>0){
+            avgUNForced=(1.0 * sumUNForced/(gameList.size()));
+        }
         return avgUNForced;
 
+    }
+
+    public String checkWinnerStringForGamesList(DBGames dbGames, int gameNumber){
+        List<GamesSQL> gameList = dbGames.getSpecificRowsByWhereEquals("game_number", gameNumber);
+        String winStatus="";
+        Log.i("checkS", Integer.toString(gameNumber));
+        Log.i("checkStatusWon", Integer.toString(gameList.get(0).getWinOrLoss()));
+        if (gameList.get(0).getWinOrLoss()==1){
+            winStatus = "You win!";
+            Log.i("checkStatusWon", Integer.toString(gameList.get(0).getWinOrLoss()));
+        }
+        if (gameList.get(0).getWinOrLoss()==2){
+            winStatus = "You lost";
+        }
+        if (gameList.get(0).getWinOrLoss()==3){
+            winStatus = "Game didn't end properly";
+        }
+        return winStatus;
     }
 }

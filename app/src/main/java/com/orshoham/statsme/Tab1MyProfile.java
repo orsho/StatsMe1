@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.content.Intent;
@@ -216,17 +217,22 @@ public class Tab1MyProfile extends Fragment  {
     public void showGameList(ArrayList<String> gamesPlayedList){
         //create "gameList" which include all Games SQL Database
         List<GamesSQL> gameList = dbGames.getAllGames();
+        //create element of TAB1Stats for checking who is the winner
+        StatsTab1 checkWinner = new StatsTab1();
         //show the database ID by showing "gameList Id" and add to view of this activity
         for(int i=0;i<gameList.size();i++){
-            Log.i("myset3(TAB1)", Integer.toString(gameList.get(i).getMySet3()));
-            gamesPlayedList.add("Game Number " + Integer.toString(gameList.get(i).getId()) + " final Score: "
+            //Log.i("myset3(TAB1)", Integer.toString(gameList.get(i).getMySet3()));
+            String winStatus = checkWinner.checkWinnerStringForGamesList(dbGames, gameList.get(i).getGameNumber());
+            gamesPlayedList.add("Game#" + Integer.toString(gameList.get(i).getGameNumber()) + "      "
                     +Integer.toString(gameList.get(i).getMySet1())+":"
                     +Integer.toString(gameList.get(i).getRivalSet1())+", "
                     +Integer.toString(gameList.get(i).getMySet2())+":"
                     +Integer.toString(gameList.get(i).getRivalSet2())+", "
                     +Integer.toString(gameList.get(i).getMySet3())+":"
-                    +Integer.toString(gameList.get(i).getRivalSet3())
+                    +Integer.toString(gameList.get(i).getRivalSet3())+"   "
+                    + winStatus
             );
+
         }
     }
 
@@ -238,6 +244,14 @@ public class Tab1MyProfile extends Fragment  {
         dbGames = new DBGames(getActivity());
         showGameList(gamesPlayedList);
     }*/
+
+    public void update(){
+        Fragment currentFragment = getFragmentManager().findFragmentByTag("container");
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.detach(currentFragment);
+        fragmentTransaction.attach(currentFragment);
+        fragmentTransaction.commit();
+    }
 
         @Nullable
     @Override
@@ -300,12 +314,37 @@ public class Tab1MyProfile extends Fragment  {
 
         //define the games list view
         gamesListView = (ListView) rootView.findViewById(R.id.gamesListView);
-        ArrayList<String> gamesPlayedList = new ArrayList<>();
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList);
+        final ArrayList<String> gamesPlayedList = new ArrayList<>();
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList);
         gamesListView.setAdapter(arrayAdapter);
         //declare the database in thid activity
         dbGames = new DBGames(getActivity());
         showGameList(gamesPlayedList);
+        //sending the game number of item in the list that being clicked
+        gamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), GameStats.class);
+                String listContent = gamesPlayedList.get(i);
+                int listIndex = gamesPlayedList.indexOf(listContent);
+                Log.i("listIndex", Integer.toString(listIndex));
+                intent.putExtra("gameId", Integer.toString(listIndex));
+                startActivity(intent);
+            }
+        });
+        gamesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), GameStats.class);
+                String listContent = gamesPlayedList.get(i);
+                int listIndex = gamesPlayedList.indexOf(listContent);
+                Log.i("removing index", Integer.toString(listIndex));
+                dbGames.deleteOneGame(listIndex+1);
+                gamesPlayedList.remove(listIndex);
+                arrayAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
 
         /*
         gamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -342,6 +381,8 @@ public class Tab1MyProfile extends Fragment  {
         if(dbGames.checkTableGamesNotEmpty()){
             initialText.setVisibility(View.GONE);
         }
+
+
 
         return rootView;
     }

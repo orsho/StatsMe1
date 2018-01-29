@@ -335,6 +335,7 @@ public class TennisScoreCalculates {
     public int[] updateGameSQL()
     {
         GamesSQL game = new GamesSQL();
+        //game.setGameNumber();
         game.setMySet1(myGameScore[1]);
         game.setRivalSet1(rivalGameScore[1]);
         game.setMySet2(myGameScore[2]);
@@ -349,6 +350,7 @@ public class TennisScoreCalculates {
         game.setRivalUNForced(getRivalUNForced());
         game.setWinOrLoss(getWinOrLoss());
         int oneGame[] = new int[13];
+        //oneGame[0]=game.getGameNumber();
         oneGame[0] = game.getMySet1();
         oneGame[1] = game.getRivalSet1();
         oneGame[2] = game.getMySet2();
