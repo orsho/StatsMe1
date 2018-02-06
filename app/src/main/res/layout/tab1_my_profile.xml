@@ -41,7 +41,7 @@
             android:layout_marginTop="3dp"
             android:paddingLeft="30dp"
             android:textColor="@color/color1"
-            android:text="NUM OF GAMES PLAYED:" />
+            android:text="#GAMES PLAYED:" />
 
         <TextView
             android:id="@+id/profile_stats2"
@@ -53,7 +53,7 @@
             android:layout_marginTop="3dp"
             android:paddingLeft="30dp"
             android:textColor="@color/color1"
-            android:text="NUM OF WINS:" />
+            android:text="#WINS:" />
 
         <TextView
             android:id="@+id/profile_stats3"
@@ -65,7 +65,7 @@
             android:layout_marginTop="3dp"
             android:paddingLeft="30dp"
             android:textColor="@color/color1"
-            android:text="NUM OF LOSSES:" />
+            android:text="#LOSSES:" />
 
         <TextView
             android:id="@+id/profile_stats4"

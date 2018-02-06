@@ -39,7 +39,7 @@ public class GamesSQL {
         this.rivalWinners=oneGame[9];
         this.rivalForced=oneGame[10];
         this.rivalUNForced=oneGame[11];
-        this.winOrLoss=oneGame[11];
+        this.winOrLoss=oneGame[12];
     }
 
     public GamesSQL() {

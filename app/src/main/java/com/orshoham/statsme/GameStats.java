@@ -14,8 +14,8 @@ public class GameStats extends AppCompatActivity {
 
         //get the game number of item that being clicked in Tab1MyProfile
         Intent intent = getIntent();
-        String gameIdString = intent.getStringExtra("gameId");
-        int gameId = Integer.parseInt(gameIdString);
-        Log.i("gameId in Stats", Integer.toString(gameId));
+        String gameNumberString = intent.getStringExtra("gameNumber");
+        int gameNumber = Integer.parseInt(gameNumberString);
+        Log.i("gameNumber in Stats", Integer.toString(gameNumber));
     }
 }

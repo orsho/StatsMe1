@@ -20,7 +20,7 @@ public class StatsTab1 extends Tab1MyProfile {
 
     public int checkSumWins (DBGames dbGames){
         List<GamesSQL> gameList = dbGames.getSpecificRowsByWhereEquals("win_or_loss", 1);
-
+        Log.i("winorloss listSize", Integer.toString(gameList.size()));
         for(int i=0;i<gameList.size();i++){
             sumWins++;
         }

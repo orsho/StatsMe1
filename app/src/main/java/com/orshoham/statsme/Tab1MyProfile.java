@@ -7,10 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.content.Intent;
@@ -219,7 +223,7 @@ public class Tab1MyProfile extends Fragment  {
         List<GamesSQL> gameList = dbGames.getAllGames();
         //create element of TAB1Stats for checking who is the winner
         StatsTab1 checkWinner = new StatsTab1();
-        //show the database ID by showing "gameList Id" and add to view of this activity
+        //show the game numbers and score form DB by showing "gameList" and add to view of this activity
         for(int i=0;i<gameList.size();i++){
             //Log.i("myset3(TAB1)", Integer.toString(gameList.get(i).getMySet3()));
             String winStatus = checkWinner.checkWinnerStringForGamesList(dbGames, gameList.get(i).getGameNumber());
@@ -262,6 +266,7 @@ public class Tab1MyProfile extends Fragment  {
         FirebaseUser user = mAuth.getCurrentUser();
         final String userID = user.getUid();
 
+        final StatsTab1 mainStats = new StatsTab1();
 
 
             //check if user is not logged in
@@ -312,58 +317,88 @@ public class Tab1MyProfile extends Fragment  {
         //define profile image
         userImageProfileView = (ImageView) rootView.findViewById(R.id.profile_pic);
 
+
         //define the games list view
         gamesListView = (ListView) rootView.findViewById(R.id.gamesListView);
         final ArrayList<String> gamesPlayedList = new ArrayList<>();
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList);
+
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList){
+        @Override
+        //color the text if win or loss
+        public View getView(int position, View convertView, ViewGroup parent){
+            // Get the current item from ListView
+            View view = super.getView(position,convertView,parent);
+            //insert to var winStatus String that contained you win/you lost
+            String winStatus = mainStats.checkWinnerStringForGamesList(dbGames, position+1);
+            //itemView = the item of the specific row on the list
+            TextView itemView = (TextView) view.findViewById(android.R.id.text1);
+            //selectedFromList= the string of the specific row
+            String selectedFromList = (String) (gamesListView.getItemAtPosition(position));
+            Spannable spannable = new SpannableString(selectedFromList);
+            if(winStatus.contains("win"))
+            {
+                // Set blue color between specific indexes in the string of the specific row
+                spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#0f65af")), 25, 36, 0);
+            }
+            else if(winStatus.contains("lost"))
+            {
+                //set red color
+                spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#db084b")), 25, 36, 0);
+
+            }
+            else
+            {
+                // Set black
+                itemView.setTextColor(Color.parseColor("#000000"));
+            }
+            //itemView.setText(spannable, TextView.BufferType.SPANNABLE);
+            itemView.setText(spannable);
+            return view;
+        }
+        };
         gamesListView.setAdapter(arrayAdapter);
-        //declare the database in thid activity
+        //declare the database in thiש activity
         dbGames = new DBGames(getActivity());
         showGameList(gamesPlayedList);
-        //sending the game number of item in the list that being clicked
+        //sending the game number of item in the list that being clicked and open that specific game
         gamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), GameStats.class);
                 String listContent = gamesPlayedList.get(i);
-                int listIndex = gamesPlayedList.indexOf(listContent);
+                int listIndex = gamesPlayedList.indexOf(listContent)+1;
                 Log.i("listIndex", Integer.toString(listIndex));
-                intent.putExtra("gameId", Integer.toString(listIndex));
+                intent.putExtra("gameNumber", Integer.toString(listIndex));
                 startActivity(intent);
             }
         });
+        //delete game by long click
         gamesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity(), GameStats.class);
+                //Intent intent = new Intent(getActivity(), GameStats.class);
+                //var listContent get the index (the row) that being clicked
                 String listContent = gamesPlayedList.get(i);
                 int listIndex = gamesPlayedList.indexOf(listContent);
                 Log.i("removing index", Integer.toString(listIndex));
+                //delete the row by operate function in DB class. send the number of the game that we want to delete
                 dbGames.deleteOneGame(listIndex+1);
+                //delete the row in this list
                 gamesPlayedList.remove(listIndex);
                 arrayAdapter.notifyDataSetChanged();
                 return true;
             }
         });
 
-        /*
-        gamesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getActivity(), GameStats.class);
-                intent.putExtra("gameId", gameId.get(i));
-                startActivity(intent);
-            }
-        });*/
+
 
         //define main stats and show them by functions
-        StatsTab1 mainStats = new StatsTab1();
         gamesPlayedView = (TextView) rootView.findViewById(R.id.gamesPlayedId);
-        gamesPlayedView.setText("NUM OF GAMES PLAYED: "+ Integer.toString(mainStats.numOfGamesPlayed(dbGames)));
+        gamesPlayedView.setText("#GAMES PLAYED: "+ Integer.toString(mainStats.numOfGamesPlayed(dbGames)));
         numberOfWinsView = (TextView) rootView.findViewById(R.id.profile_stats2);
-        numberOfWinsView.setText("NUM OF WINS: "+ Integer.toString(mainStats.checkSumWins(dbGames)));
+        numberOfWinsView.setText("#WINS: "+ Integer.toString(mainStats.checkSumWins(dbGames)));
         numberOfWinsView = (TextView) rootView.findViewById(R.id.profile_stats3);
-        numberOfWinsView.setText("NUM OF LOSSES: "+ Integer.toString(mainStats.checkSumLosses(dbGames)));
+        numberOfWinsView.setText("#LOSSES: "+ Integer.toString(mainStats.checkSumLosses(dbGames)));
         avgWinnersView = (TextView) rootView.findViewById(R.id.profile_stats4);
         avgWinnersView.setText("AVG WINNERS PG: "+ Double.toString(mainStats.avgWinnersPG(dbGames)));
         Log.i("avg winners", Double.toString(mainStats.avgWinnersPG(dbGames)));

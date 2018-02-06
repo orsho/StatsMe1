@@ -349,6 +349,8 @@ public class TennisScoreCalculates {
         game.setRivalForced(getRivalForced());
         game.setRivalUNForced(getRivalUNForced());
         game.setWinOrLoss(getWinOrLoss());
+        Log.i("winorloss Tennis", Integer.toString(getWinOrLoss()));
+        Log.i("winorloss SQL", Integer.toString(game.getWinOrLoss()));
         int oneGame[] = new int[13];
         //oneGame[0]=game.getGameNumber();
         oneGame[0] = game.getMySet1();
