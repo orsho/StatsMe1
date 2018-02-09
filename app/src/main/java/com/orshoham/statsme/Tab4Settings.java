@@ -1,20 +1,48 @@
 package com.orshoham.statsme;
 
+import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class Tab4Settings extends Fragment implements View.OnClickListener {
+public class Tab4Settings extends Fragment {
 
-    private Button btnLogout;
     private FirebaseAuth auth;
+
+    ListView list;
+
+    String[] itemname ={
+            "Games Rules",
+            "Edit Profile",
+            "Share",
+            "Contact Us",
+            "About",
+            "Logout"
+    };
+
+    Integer[] imgid={
+            R.drawable.setting_game_rules,
+            R.drawable.setting_edit_profile,
+            R.drawable.setting_share,
+            R.drawable.setting_contact_us,
+            R.drawable.setting_about,
+            R.drawable.setting_logout,
+    };
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -22,18 +50,46 @@ public class Tab4Settings extends Fragment implements View.OnClickListener {
 
         auth = FirebaseAuth.getInstance();
 
-        btnLogout = (Button) rootView.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(this);
+        Tab4CustomListAdapter adapter=new Tab4CustomListAdapter(getActivity(), itemname, imgid);
+        list =(ListView)rootView.findViewById(R.id.settingListView);
+        list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // TODO Auto-generated method stub
+                Log.i("position", Integer.toString(position));
+                if (position == 4){
+                    Intent intent = new Intent(getActivity(), Tab4About.class);
+                    startActivity(intent);
+                }
+                if (position == 5){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Do you want to logout?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    auth.signOut();
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+
+            }
+        });
 
         return rootView;
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view == btnLogout){
-            auth.signOut();
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-        }
-    }
+
 }

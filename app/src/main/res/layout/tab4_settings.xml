@@ -10,12 +10,11 @@
     android:background="@color/color3"
     tools:context="com.orshoham.statsme.StartActivity$PlaceholderFragment">
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Log Out" />
+    <ListView
+        android:id="@+id/settingListView"
+        android:layout_width="match_parent"
+        android:layout_height="400sp">
+    </ListView>
+
 
 </RelativeLayout>
