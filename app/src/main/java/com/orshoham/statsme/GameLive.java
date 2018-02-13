@@ -72,6 +72,19 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     TextView rivalWinnerViewId;
     TextView rivalForcedViewId;
     TextView rivalUnforcedViewId;
+    TextView myAcesViewId;
+    TextView rivalAcesViewId;
+    TextView myDoublesViewId;
+    TextView rivalDoublesViewId;
+    TextView myServesViewId;
+    TextView rivalServesViewId;
+    TextView myFirstViewId;
+    TextView rivalFirstViewId;
+    TextView mySecondViewId;
+    TextView rivalSecondViewId;
+    TextView myNetViewId;
+    TextView rivalNetViewId;
+
 
     public void startGame (View view) {
         //check if play or pause
@@ -229,7 +242,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             s += result + "\n";
 
         Log.i(TAG,"results: "+ matches.get(0));
-        Toast.makeText(GameLive.this, s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(GameLive.this, s, Toast.LENGTH_LONG).show();
+        Log.i("what I said",s);
         //add this s result(speech) to db data base in SQLite
         db.addRecord(new Speech(s));
         gamePoints(s);
@@ -281,27 +295,33 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     }
 
     public void gamePoints(String s) {
-        if (s.contains("five")){
+        if ((s.contains("my")||s.contains("ma"))&& (s.contains("win")||s.contains("wie"))){
             myWinnerViewId.setText(Integer.toString(calc.addMyWinners()));
             updateMyScore();
         }
-        if (s.contains("six")){
+        if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
+             (s.contains("fau")||s.contains("for")) &&
+             (!s.contains("on")&&!s.contains("un")&&!s.contains("own")&&!s.contains("ya")) ){
             myForcedViewId.setText(Integer.toString(calc.addMyForced()));
             updateRivalScore();
         }
-        if (s.contains("seven")){
+        if ((s.contains("my")||s.contains("ma"))&& (s.contains("un")||s.contains("ya")||s.contains("own")||s.contains("ton"))){
             myUnforcedViewId.setText(Integer.toString(calc.addMyUNForced()));
             updateRivalScore();
         }
-        if (s.contains("eight")){
+        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
+                (s.contains("win")||s.contains("wie")) ){
             rivalWinnerViewId.setText(Integer.toString(calc.addRivalWinners()));
             updateRivalScore();
         }
-        if (s.contains("nine")){
+        if ((s.contains("ri")||s.contains("su")||s.contains("li")||s.contains("rh"))&&
+                (s.contains("fa")||s.contains("for")||s.contains("fi")||s.contains("fr")||s.contains("fl")) &&
+                (!s.contains("on")&&!s.contains("un")&&!s.contains("own")&&!s.contains("ya")&&!s.contains("and")) ){
             rivalForcedViewId.setText(Integer.toString(calc.addRivalForced()));
             updateMyScore();
         }
-        if (s.contains("eleven")){
+        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
+                (s.contains("un")||s.contains("ya")||s.contains("own")||s.contains("ton")||s.contains("and")) ){
             rivalUnforcedViewId.setText(Integer.toString(calc.addRivalUNForced()));
             updateMyScore();
         }

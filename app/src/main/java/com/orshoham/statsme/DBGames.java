@@ -16,7 +16,7 @@ public class DBGames extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "gamesData";
-
+    private static final String selectFrom = "SELECT * FROM ";
     // speech table name
     private static final String TABLE_GAMES = "games";
     // speech Table Columns names
@@ -35,6 +35,18 @@ public class DBGames extends SQLiteOpenHelper {
     public static final String KEY_RIVALFORCED_NUMBER = "rival_forced_score";
     public static final String KEY_RIVALUNFORCED_NUMBER = "rival_unforced_score";
     public static final String KEY_WINORLOSS_NUMBER = "win_or_loss";
+    public static final String KEY_MYACES_NUMBER = "my_aces_score";
+    public static final String KEY_RIVALACES_NUMBER = "rival_aces_score";
+    public static final String KEY_MYDOUBLES_NUMBER = "my_doubles_score";
+    public static final String KEY_RIVALDOUBLES_NUMBER = "rival_doubles_score";
+    public static final String KEY_MYSERVES_NUMBER = "my_serves_score";
+    public static final String KEY_RIVALSERVES_NUMBER = "rival_serves_score";
+    public static final String KEY_MYFIRST_NUMBER = "my_first_score";
+    public static final String KEY_RIVALFIRST_NUMBER = "rival_first_score";
+    public static final String KEY_MYSECOND_NUMBER = "my_second_score";
+    public static final String KEY_RIVALSECOND_NUMBER = "rival_second_score";
+    public static final String KEY_MYNET_NUMBER = "my_net_score";
+    public static final String KEY_RIVALNET_NUMBER = "rival_net_score";
 
 
     public DBGames(Context context) {
@@ -90,7 +102,7 @@ public class DBGames extends SQLiteOpenHelper {
     public void addMyGameStats(GamesSQL game) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String selectQuery = "SELECT * FROM " + TABLE_GAMES;
+        String selectQuery = selectFrom + TABLE_GAMES;
         Cursor cursor = db.rawQuery(selectQuery, null);
         //move to the last row of the DB
         cursor.moveToLast();
@@ -115,6 +127,18 @@ public class DBGames extends SQLiteOpenHelper {
         values.put(KEY_RIVALFORCED_NUMBER, game.getRivalForced());
         values.put(KEY_RIVALUNFORCED_NUMBER, game.getRivalUNForced());
         values.put(KEY_WINORLOSS_NUMBER, game.getWinOrLoss());
+        values.put(KEY_MYACES_NUMBER, game.getMyAces());
+        values.put(KEY_RIVALACES_NUMBER, game.getRivalAces());
+        values.put(KEY_MYDOUBLES_NUMBER, game.getMyDoubles());
+        values.put(KEY_RIVALDOUBLES_NUMBER, game.getRivalDoubles());
+        values.put(KEY_MYSERVES_NUMBER, game.getMyServes());
+        values.put(KEY_RIVALSERVES_NUMBER, game.getMyServes());
+        values.put(KEY_MYFIRST_NUMBER, game.getMyFirst());
+        values.put(KEY_RIVALFIRST_NUMBER, game.getMyFirst());
+        values.put(KEY_MYSECOND_NUMBER, game.getMySecond());
+        values.put(KEY_RIVALSECOND_NUMBER, game.getMySecond());
+        values.put(KEY_MYNET_NUMBER, game.getMyNet());
+        values.put(KEY_RIVALNET_NUMBER, game.getRivalNet());
         Log.i("winorloss insert", Integer.toString(game.getWinOrLoss()));
         // Inserting Row
         db.insert(TABLE_GAMES, null, values);
@@ -124,14 +148,14 @@ public class DBGames extends SQLiteOpenHelper {
     // Getting All Speeches
     public List getAllGames() {
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_GAMES;
+        String selectQuery = selectFrom + TABLE_GAMES;
         // return list
         return moveThroughAllColumnByQuery(selectQuery);
     }
 
     public List getSpecificRowsByWhereEquals(String colunmName, int number) {
         // Select All Query WHERE
-        String selectQuery = "SELECT * FROM games WHERE " + colunmName + "=" + number;
+        String selectQuery = selectFrom + "games WHERE " + colunmName + "=" + number;
         // return list
         return moveThroughAllColumnByQuery(selectQuery);
     }
@@ -159,6 +183,18 @@ public class DBGames extends SQLiteOpenHelper {
                 game.setRivalForced(cursor.getInt(12));
                 game.setRivalUNForced(cursor.getInt(13));
                 game.setWinOrLoss(cursor.getInt(14));
+                game.setMyAces(cursor.getInt(15));
+                game.setRivalAces(cursor.getInt(16));
+                game.setMyDoubles(cursor.getInt(17));
+                game.setRivalDoubles(cursor.getInt(18));
+                game.setMyServes(cursor.getInt(19));
+                game.setRivalServes(cursor.getInt(20));
+                game.setMyFirst(cursor.getInt(21));
+                game.setRivalFirst(cursor.getInt(22));
+                game.setMySecond(cursor.getInt(23));
+                game.setRivalSecond(cursor.getInt(24));
+                game.setMyNet(cursor.getInt(25));
+                game.setRivalNet(cursor.getInt(26));
                 Log.i("winorloss (loopDB)", Integer.toString(cursor.getInt(14)));
                 // Adding to list
                 gameList.add(game);
@@ -170,7 +206,7 @@ public class DBGames extends SQLiteOpenHelper {
 
     public void updateGameNumbers(){
         // Select All DB
-        String selectQuery = "SELECT * FROM " + TABLE_GAMES;
+        String selectQuery = selectFrom + TABLE_GAMES;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         ContentValues values = new ContentValues();
@@ -216,7 +252,19 @@ public class DBGames extends SQLiteOpenHelper {
                 + KEY_RIVALWINNERS_NUMBER + " INTEGER, "
                 + KEY_RIVALFORCED_NUMBER + " INTEGER, "
                 + KEY_RIVALUNFORCED_NUMBER + " INTEGER, "
-                + KEY_WINORLOSS_NUMBER + " INTEGER "
+                + KEY_WINORLOSS_NUMBER + " INTEGER, "
+                + KEY_MYACES_NUMBER + " INTEGER, "
+                + KEY_RIVALACES_NUMBER + " INTEGER, "
+                + KEY_MYDOUBLES_NUMBER + " INTEGER, "
+                + KEY_RIVALDOUBLES_NUMBER + " INTEGER, "
+                + KEY_MYSERVES_NUMBER + " INTEGER, "
+                + KEY_RIVALSERVES_NUMBER + " INTEGER, "
+                + KEY_MYFIRST_NUMBER + " INTEGER, "
+                + KEY_RIVALFIRST_NUMBER + " INTEGER, "
+                + KEY_MYSECOND_NUMBER + " INTEGER, "
+                + KEY_RIVALSECOND_NUMBER + " INTEGER, "
+                + KEY_MYNET_NUMBER + " INTEGER, "
+                + KEY_RIVALNET_NUMBER + " INTEGER "
                 + ");";
         Log.i("createDB=", sqlGames);
         db.execSQL(sqlGames);

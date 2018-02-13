@@ -129,6 +129,7 @@
             android:layout_row="0"
             android:gravity="center"
             android:text="0"
+            android:textColor="#1D6598"
             android:textSize="17sp" />
 
         <TextView
@@ -141,6 +142,7 @@
             android:layout_row="1"
             android:gravity="center"
             android:text="0"
+            android:textColor="#1D6598"
             android:textSize="17sp" />
 
         <TextView
@@ -153,6 +155,7 @@
             android:layout_row="2"
             android:gravity="center"
             android:text="0"
+            android:textColor="#1D6598"
             android:textSize="17sp" />
 
         <TextView
@@ -233,18 +236,7 @@
             android:textColor="#1D6598"
             android:textSize="17sp" />
 
-        <TextView
-            android:id="@+id/myBreaksId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_marginTop="7sp"
-            android:layout_row="9"
-            android:gravity="center"
-            android:text="0/0"
-            android:textColor="#686A5C"
-            android:textSize="17sp" />
+
 
         <TextView
             android:id="@+id/acesId"
@@ -254,8 +246,8 @@
             android:layout_columnWeight="1"
             android:layout_row="0"
             android:gravity="center"
-            android:text="ACES"
-            android:textColor="#686A5C"
+            android:text="ACE"
+            android:textColor="#000000"
             android:textSize="17sp" />
 
         <TextView
@@ -267,8 +259,8 @@
             android:layout_marginTop="7sp"
             android:layout_row="1"
             android:gravity="center"
-            android:text="DOUBLE FAULTS"
-            android:textColor="#686A5C"
+            android:text="DOUBLE (FAULTS)"
+            android:textColor="#000000"
             android:textSize="17sp" />
 
         <TextView
@@ -293,7 +285,7 @@
             android:layout_marginTop="7sp"
             android:layout_row="3"
             android:gravity="center"
-            android:text="1st SERVE WON%"
+            android:text="1st (SERVE WON%)"
             android:textColor="#000000"
             android:textSize="17sp" />
 
@@ -306,7 +298,7 @@
             android:layout_marginTop="7sp"
             android:layout_row="4"
             android:gravity="center"
-            android:text="2nd SERVE WON%"
+            android:text="2nd (SERVE WON%)"
             android:textColor="#000000"
             android:textSize="17sp" />
 
@@ -319,7 +311,7 @@
             android:layout_marginTop="7sp"
             android:layout_row="5"
             android:gravity="center"
-            android:text="WINNERS (5/8)"
+            android:text="WINNER"
             android:textColor="#000000"
             android:textSize="17sp" />
 
@@ -332,7 +324,7 @@
             android:layout_marginTop="7sp"
             android:layout_row="6"
             android:gravity="center"
-            android:text="F ERRORS (6/9)"
+            android:text="FORCED"
             android:textColor="#000000"
             android:textSize="17sp" />
 
@@ -345,7 +337,7 @@
             android:layout_marginTop="7sp"
             android:layout_row="7"
             android:gravity="center"
-            android:text="UN F ERRORS (7/11)"
+            android:text="UNFORCED"
             android:textColor="#000000"
             android:textSize="17sp" />
 
@@ -358,22 +350,11 @@
             android:layout_marginTop="7sp"
             android:layout_row="8"
             android:gravity="center"
-            android:text="NET POINTS WON"
+            android:text="NET (POINTS WON)"
             android:textColor="#000000"
             android:textSize="17sp" />
 
-        <TextView
-            android:id="@+id/breaksId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:layout_marginTop="7sp"
-            android:layout_row="9"
-            android:gravity="center"
-            android:text="BREAK POINTS WON"
-            android:textColor="#686A5C"
-            android:textSize="17sp" />
+
 
         <TextView
             android:id="@+id/rivalAcesId"
@@ -384,7 +365,7 @@
             android:layout_row="0"
             android:gravity="center"
             android:text="0"
-            android:textColor="#686A5C"
+            android:textColor="#1D6598"
             android:textSize="17sp" />
 
         <TextView
@@ -397,7 +378,7 @@
             android:layout_row="1"
             android:gravity="center"
             android:text="0"
-            android:textColor="#686A5C"
+            android:textColor="#1D6598"
             android:textSize="17sp" />
 
         <TextView
@@ -410,7 +391,7 @@
             android:layout_row="2"
             android:gravity="center"
             android:text="0"
-            android:textColor="#686A5C"
+            android:textColor="#1D6598"
             android:textSize="17sp" />
 
         <TextView
@@ -488,20 +469,10 @@
             android:layout_row="8"
             android:gravity="center"
             android:text="0/0"
-            android:textColor="#686A5C"
+            android:textColor="#1D6598"
             android:textSize="17sp" />
 
-        <TextView
-            android:id="@+id/rivalBreakId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="2"
-            android:layout_columnWeight="1"
-            android:layout_marginTop="7sp"
-            android:layout_row="9"
-            android:gravity="center"
-            android:text="0/0"
-            android:textSize="17sp" />
+
 
 
 

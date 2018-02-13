@@ -19,6 +19,18 @@ public class GamesSQL {
     private int rivalForced;
     private int rivalUNForced;
     private int winOrLoss;
+    private int myAces;
+    private int rivalAces;
+    private int myDoubles;
+    private int rivalDoubles;
+    private int myServes;
+    private int rivalServes;
+    private int myFirst;
+    private int rivalFirst;
+    private int mySecond;
+    private int rivalSecond;
+    private int myNet;
+    private int rivalNet;
 
     /*
     public GamesSQL(int mySet1, int rivalSet1, int mySet2, int rivalSet2, int mySet3, int rivalSet3,
@@ -40,6 +52,19 @@ public class GamesSQL {
         this.rivalForced=oneGame[10];
         this.rivalUNForced=oneGame[11];
         this.winOrLoss=oneGame[12];
+        this.myAces=oneGame[13];
+        this.rivalAces=oneGame[14];
+        this.myDoubles=oneGame[15];
+        this.rivalDoubles=oneGame[16];
+        this.myServes=oneGame[17];
+        this.rivalServes=oneGame[18];
+        this.myFirst=oneGame[19];
+        this.rivalFirst=oneGame[20];
+        this.mySecond=oneGame[21];
+        this.rivalSecond=oneGame[22];
+        this.myNet=oneGame[23];
+        this.rivalNet=oneGame[24];
+
     }
 
     public GamesSQL() {
@@ -106,6 +131,54 @@ public class GamesSQL {
         this.winOrLoss=winOrLoss;
     }
 
+    public void setMyAces(int myAces){
+        this.myAces=myAces;
+    }
+
+    public void setRivalAces(int rivalAces){
+        this.rivalAces=rivalAces;
+    }
+
+    public void setMyDoubles(int myDoubles){
+        this.myDoubles=myDoubles;
+    }
+
+    public void setRivalDoubles(int rivalDoubles){
+        this.rivalDoubles=rivalDoubles;
+    }
+
+    public void setMyServes(int myServes){
+        this.myServes=myServes;
+    }
+
+    public void setRivalServes(int rivalServes){
+        this.rivalServes=rivalServes;
+    }
+
+    public void setMyFirst(int myFirst){
+        this.myFirst=myFirst;
+    }
+
+    public void setRivalFirst(int rivalFirst){
+        this.rivalFirst=rivalFirst;
+    }
+
+    public void setMySecond(int mySecond){
+        this.mySecond=mySecond;
+    }
+
+    public void setRivalSecond(int rivalSecond){
+        this.rivalSecond=rivalSecond;
+    }
+
+    public void setMyNet(int myNet){
+        this.myNet=myNet;
+    }
+
+    public void setRivalNet(int rivalNet){
+        this.rivalNet=rivalNet;
+    }
+
 
     public int getId() {
         return id;
@@ -165,6 +238,54 @@ public class GamesSQL {
 
     public int getWinOrLoss(){
         return winOrLoss;
+    }
+
+    public int getMyAces(){
+        return myAces;
+    }
+
+    public int getRivalAces(){
+        return rivalAces;
+    }
+
+    public int getMyDoubles(){
+        return myDoubles;
+    }
+
+    public int getRivalDoubles(){
+        return rivalDoubles;
+    }
+
+    public int getMyServes(){
+        return myServes;
+    }
+
+    public int getRivalServes(){
+        return rivalServes;
+    }
+
+    public int getMyFirst(){
+        return myFirst;
+    }
+
+    public int getRivalFirst(){
+        return rivalFirst;
+    }
+
+    public int getMySecond(){
+        return mySecond;
+    }
+
+    public int getRivalSecond(){
+        return rivalSecond;
+    }
+
+    public int getMyNet(){
+        return myNet;
+    }
+
+    public int getRivalNet(){
+        return rivalNet;
     }
 }
 

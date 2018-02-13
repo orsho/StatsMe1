@@ -407,8 +407,6 @@ public class Tab1MyProfile extends Fragment  {
 
 
 
-
-
         //initial text before games have played
         TextView initialText = (TextView) rootView.findViewById(R.id.initialText);
         initialText.setText("You have not played any games yet");

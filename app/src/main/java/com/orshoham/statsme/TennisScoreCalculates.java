@@ -23,6 +23,18 @@ public class TennisScoreCalculates {
     int countRivalWinners = 0;
     int countRivalForced = 0;
     int countRivalUNForced = 0;
+    int countMyAces = 0;
+    int countRivalAces = 0;
+    int countMyDoubles = 0;
+    int countRivalDoubles = 0;
+    int countMyServes = 0;
+    int countRivalServes = 0;
+    int countMyFirst = 0;
+    int countRivalFirst = 0;
+    int countMySecond = 0;
+    int countRivalSecond = 0;
+    int countMyNet = 0;
+    int countRivalNet = 0;
 
     int winOrLoss = 3;
 
@@ -68,6 +80,54 @@ public class TennisScoreCalculates {
 
     public int getWinOrLoss(){
         return winOrLoss;
+    }
+
+    public int getMyAces(){
+        return countMyAces;
+    }
+
+    public int getRivalAces(){
+        return countRivalAces;
+    }
+
+    public int getMyDoubles(){
+        return countMyDoubles;
+    }
+
+    public int getRivalDoubles(){
+        return countRivalDoubles;
+    }
+
+    public int getMyServes(){
+        return countMyServes;
+    }
+
+    public int getRivalServes(){
+        return countRivalServes;
+    }
+
+    public int getMyFirst(){
+        return countMyFirst;
+    }
+
+    public int getRivalFirst(){
+        return countRivalFirst;
+    }
+
+    public int getMySecond(){
+        return countMySecond;
+    }
+
+    public int getRivalSecond(){
+        return countRivalSecond;
+    }
+
+    public int getMyNet(){
+        return countMyNet;
+    }
+
+    public int getRivalNet(){
+        return countRivalNet;
     }
 
 
@@ -267,6 +327,66 @@ public class TennisScoreCalculates {
         return countRivalUNForced;
     }
 
+    public int addMyAces(){
+        countMyAces++;
+        return countMyAces;
+    }
+
+    public int addRivalAces(){
+        countRivalAces++;
+        return countRivalAces;
+    }
+
+    public int addMyDoubles(){
+        countMyDoubles++;
+        return countMyDoubles;
+    }
+
+    public int addRivalDoubles(){
+        countRivalDoubles++;
+        return countRivalDoubles;
+    }
+
+    public int addMyServes(){
+        countMyServes++;
+        return countMyServes;
+    }
+
+    public int addRivalServes(){
+        countRivalServes++;
+        return countRivalServes;
+    }
+
+    public int addMyFirst(){
+        countMyFirst++;
+        return countMyFirst;
+    }
+
+    public int addRivalFirst(){
+        countRivalFirst++;
+        return countRivalFirst;
+    }
+
+    public int addMySecond(){
+        countMySecond++;
+        return countMySecond;
+    }
+
+    public int addRivalSecond(){
+        countRivalSecond++;
+        return countRivalSecond;
+    }
+
+    public int addMyNet(){
+        countMyNet++;
+        return countMyNet;
+    }
+
+    public int addRivalNet(){
+        countRivalNet++;
+        return countRivalNet;
+    }
+
     /*
     //upload the number of times there is five (myWinner) in SQLite to Firebase by sets
     public void addMyWinners(int sqlCountMyWinners){
@@ -349,9 +469,21 @@ public class TennisScoreCalculates {
         game.setRivalForced(getRivalForced());
         game.setRivalUNForced(getRivalUNForced());
         game.setWinOrLoss(getWinOrLoss());
+        game.setMyAces(getMyAces());
+        game.setRivalAces(getRivalAces());
+        game.setMyDoubles(getMyDoubles());
+        game.setRivalDoubles(getRivalDoubles());
+        game.setMyServes(getMyServes());
+        game.setRivalServes(getRivalServes());
+        game.setMyFirst(getMyFirst());
+        game.setRivalFirst(getRivalFirst());
+        game.setMySecond(getMySecond());
+        game.setRivalSecond(getRivalSecond());
+        game.setMyNet(getMyNet());
+        game.setRivalNet(getRivalNet());
         Log.i("winorloss Tennis", Integer.toString(getWinOrLoss()));
         Log.i("winorloss SQL", Integer.toString(game.getWinOrLoss()));
-        int oneGame[] = new int[13];
+        int oneGame[] = new int[25];
         //oneGame[0]=game.getGameNumber();
         oneGame[0] = game.getMySet1();
         oneGame[1] = game.getRivalSet1();
@@ -366,6 +498,18 @@ public class TennisScoreCalculates {
         oneGame[10] = game.getRivalForced();
         oneGame[11] = game.getRivalUNForced();
         oneGame[12] = game.getWinOrLoss();
+        oneGame[13] = game.getMyAces();
+        oneGame[14] = game.getRivalAces();
+        oneGame[15] = game.getMyDoubles();
+        oneGame[16] = game.getRivalDoubles();
+        oneGame[17] = game.getMyServes();
+        oneGame[18] = game.getRivalServes();
+        oneGame[19] = game.getMyFirst();
+        oneGame[20] = game.getRivalFirst();
+        oneGame[21] = game.getMySecond();
+        oneGame[22] = game.getRivalSecond();
+        oneGame[23] = game.getMyNet();
+        oneGame[24] = game.getRivalNet();
 
         return oneGame;
 
