@@ -27,8 +27,10 @@ public class TennisScoreCalculates {
     int countRivalAces = 0;
     int countMyDoubles = 0;
     int countRivalDoubles = 0;
-    int countMyServes = 0;
-    int countRivalServes = 0;
+    int countMyTotalFirst = 0;
+    int countRivalTotalFirst = 0;
+    int countMyTotalSecond = 0;
+    int countRivalTotalSecond = 0;
     int countMyFirst = 0;
     int countRivalFirst = 0;
     int countMySecond = 0;
@@ -98,12 +100,20 @@ public class TennisScoreCalculates {
         return countRivalDoubles;
     }
 
-    public int getMyServes(){
-        return countMyServes;
+    public int getCountMyTotalFirst(){
+        return countMyTotalFirst;
     }
 
-    public int getRivalServes(){
-        return countRivalServes;
+    public int getCountRivalTotalFirst(){
+        return countRivalTotalFirst;
+    }
+
+    public int getCountMyTotalSecond(){
+        return countMyTotalFirst;
+    }
+
+    public int getCountRivalTotalSecond(){
+        return countRivalTotalFirst;
     }
 
     public int getMyFirst(){
@@ -347,14 +357,24 @@ public class TennisScoreCalculates {
         return countRivalDoubles;
     }
 
-    public int addMyServes(){
-        countMyServes++;
-        return countMyServes;
+    public int addMyTotalFirst(){
+        countMyTotalFirst++;
+        return countMyTotalFirst;
     }
 
-    public int addRivalServes(){
-        countRivalServes++;
-        return countRivalServes;
+    public int addRivalTotalFirst(){
+        countRivalTotalFirst++;
+        return countRivalTotalFirst;
+    }
+
+    public int addMyTotalSecond(){
+        countMyTotalSecond++;
+        return countMyTotalSecond;
+    }
+
+    public int addRivalTotalSecond(){
+        countRivalTotalSecond++;
+        return countRivalTotalSecond;
     }
 
     public int addMyFirst(){
@@ -473,8 +493,10 @@ public class TennisScoreCalculates {
         game.setRivalAces(getRivalAces());
         game.setMyDoubles(getMyDoubles());
         game.setRivalDoubles(getRivalDoubles());
-        game.setMyServes(getMyServes());
-        game.setRivalServes(getRivalServes());
+        game.setMyTotalFirst(getCountMyTotalFirst());
+        game.setRivalTotalFirst(getCountRivalTotalFirst());
+        game.setMyTotalSecond(getCountMyTotalFirst());
+        game.setRivalTotalSecond(getCountRivalTotalFirst());
         game.setMyFirst(getMyFirst());
         game.setRivalFirst(getRivalFirst());
         game.setMySecond(getMySecond());
@@ -483,7 +505,7 @@ public class TennisScoreCalculates {
         game.setRivalNet(getRivalNet());
         Log.i("winorloss Tennis", Integer.toString(getWinOrLoss()));
         Log.i("winorloss SQL", Integer.toString(game.getWinOrLoss()));
-        int oneGame[] = new int[25];
+        int oneGame[] = new int[27];
         //oneGame[0]=game.getGameNumber();
         oneGame[0] = game.getMySet1();
         oneGame[1] = game.getRivalSet1();
@@ -502,14 +524,16 @@ public class TennisScoreCalculates {
         oneGame[14] = game.getRivalAces();
         oneGame[15] = game.getMyDoubles();
         oneGame[16] = game.getRivalDoubles();
-        oneGame[17] = game.getMyServes();
-        oneGame[18] = game.getRivalServes();
-        oneGame[19] = game.getMyFirst();
-        oneGame[20] = game.getRivalFirst();
-        oneGame[21] = game.getMySecond();
-        oneGame[22] = game.getRivalSecond();
-        oneGame[23] = game.getMyNet();
-        oneGame[24] = game.getRivalNet();
+        oneGame[17] = game.getMyTotalFirst();
+        oneGame[18] = game.getRivalTotalFirst();
+        oneGame[19] = game.getMyTotalSecond();
+        oneGame[20] = game.getRivalTotalSecond();
+        oneGame[21] = game.getMyFirst();
+        oneGame[22] = game.getRivalFirst();
+        oneGame[23] = game.getMySecond();
+        oneGame[24] = game.getRivalSecond();
+        oneGame[25] = game.getMyNet();
+        oneGame[26] = game.getRivalNet();
 
         return oneGame;
 

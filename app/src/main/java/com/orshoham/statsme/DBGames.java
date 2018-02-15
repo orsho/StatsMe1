@@ -39,8 +39,10 @@ public class DBGames extends SQLiteOpenHelper {
     public static final String KEY_RIVALACES_NUMBER = "rival_aces_score";
     public static final String KEY_MYDOUBLES_NUMBER = "my_doubles_score";
     public static final String KEY_RIVALDOUBLES_NUMBER = "rival_doubles_score";
-    public static final String KEY_MYSERVES_NUMBER = "my_serves_score";
-    public static final String KEY_RIVALSERVES_NUMBER = "rival_serves_score";
+    public static final String KEY_MYTOTALFIRST_NUMBER = "my_total_first_score";
+    public static final String KEY_RIVALTOTALFIRST_NUMBER = "rival_total_first_score";
+    public static final String KEY_MYTOTALSECOND_NUMBER = "my_total_second_score";
+    public static final String KEY_RIVALTOTALSECOND_NUMBER = "rival_total_second_score";
     public static final String KEY_MYFIRST_NUMBER = "my_first_score";
     public static final String KEY_RIVALFIRST_NUMBER = "rival_first_score";
     public static final String KEY_MYSECOND_NUMBER = "my_second_score";
@@ -131,8 +133,10 @@ public class DBGames extends SQLiteOpenHelper {
         values.put(KEY_RIVALACES_NUMBER, game.getRivalAces());
         values.put(KEY_MYDOUBLES_NUMBER, game.getMyDoubles());
         values.put(KEY_RIVALDOUBLES_NUMBER, game.getRivalDoubles());
-        values.put(KEY_MYSERVES_NUMBER, game.getMyServes());
-        values.put(KEY_RIVALSERVES_NUMBER, game.getMyServes());
+        values.put(KEY_MYTOTALFIRST_NUMBER, game.getMyTotalFirst());
+        values.put(KEY_RIVALTOTALFIRST_NUMBER, game.getRivalTotalFirst());
+        values.put(KEY_MYTOTALSECOND_NUMBER, game.getMyTotalSecond());
+        values.put(KEY_RIVALTOTALSECOND_NUMBER, game.getRivalTotalSecond());
         values.put(KEY_MYFIRST_NUMBER, game.getMyFirst());
         values.put(KEY_RIVALFIRST_NUMBER, game.getMyFirst());
         values.put(KEY_MYSECOND_NUMBER, game.getMySecond());
@@ -187,14 +191,16 @@ public class DBGames extends SQLiteOpenHelper {
                 game.setRivalAces(cursor.getInt(16));
                 game.setMyDoubles(cursor.getInt(17));
                 game.setRivalDoubles(cursor.getInt(18));
-                game.setMyServes(cursor.getInt(19));
-                game.setRivalServes(cursor.getInt(20));
-                game.setMyFirst(cursor.getInt(21));
-                game.setRivalFirst(cursor.getInt(22));
-                game.setMySecond(cursor.getInt(23));
-                game.setRivalSecond(cursor.getInt(24));
-                game.setMyNet(cursor.getInt(25));
-                game.setRivalNet(cursor.getInt(26));
+                game.setMyTotalFirst(cursor.getInt(19));
+                game.setRivalTotalFirst(cursor.getInt(20));
+                game.setMyTotalSecond(cursor.getInt(21));
+                game.setRivalTotalSecond(cursor.getInt(22));
+                game.setMyFirst(cursor.getInt(23));
+                game.setRivalFirst(cursor.getInt(24));
+                game.setMySecond(cursor.getInt(25));
+                game.setRivalSecond(cursor.getInt(26));
+                game.setMyNet(cursor.getInt(27));
+                game.setRivalNet(cursor.getInt(28));
                 Log.i("winorloss (loopDB)", Integer.toString(cursor.getInt(14)));
                 // Adding to list
                 gameList.add(game);
@@ -257,8 +263,10 @@ public class DBGames extends SQLiteOpenHelper {
                 + KEY_RIVALACES_NUMBER + " INTEGER, "
                 + KEY_MYDOUBLES_NUMBER + " INTEGER, "
                 + KEY_RIVALDOUBLES_NUMBER + " INTEGER, "
-                + KEY_MYSERVES_NUMBER + " INTEGER, "
-                + KEY_RIVALSERVES_NUMBER + " INTEGER, "
+                + KEY_MYTOTALFIRST_NUMBER + " INTEGER, "
+                + KEY_RIVALTOTALFIRST_NUMBER + " INTEGER, "
+                + KEY_MYTOTALSECOND_NUMBER + " INTEGER, "
+                + KEY_RIVALTOTALSECOND_NUMBER + " INTEGER, "
                 + KEY_MYFIRST_NUMBER + " INTEGER, "
                 + KEY_RIVALFIRST_NUMBER + " INTEGER, "
                 + KEY_MYSECOND_NUMBER + " INTEGER, "

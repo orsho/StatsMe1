@@ -76,14 +76,38 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     TextView rivalAcesViewId;
     TextView myDoublesViewId;
     TextView rivalDoublesViewId;
-    TextView myServesViewId;
-    TextView rivalServesViewId;
-    TextView myFirstViewId;
-    TextView rivalFirstViewId;
-    TextView mySecondViewId;
-    TextView rivalSecondViewId;
+    TextView myFirstInViewId;
+    TextView rivalFirstInViewId;
+    TextView myFirstWonViewId;
+    TextView rivalFirstWonViewId;
+    TextView mySecondWonViewId;
+    TextView rivalSecondWonViewId;
     TextView myNetViewId;
     TextView rivalNetViewId;
+
+    boolean flagMyFirst = false;
+    boolean flagMySecond = false;
+    boolean flagRivalFirst = false;
+    boolean flagRivalSecond = false;
+    boolean flagMyWonPoint = false;
+    boolean flagMyLostPoint = false;
+
+    int countMyFirst = 0;
+    int countRivalFirst = 0;
+    int countMyTotalFirst = 0;
+    int countRivalTotalFirst = 0;
+    int countMySecond = 0;
+    int countRivalSecond = 0;
+    int countMyTotalSecond = 0;
+    int countRivalTotalSecond = 0;
+
+
+    float myFirstPercentageIn;
+    float rivalFirstPercentageIn;
+    float myFirstPercentageWon;
+    float mySecondPercentageWon;
+    float rivalFirstPercentageWon;
+    float rivalSecondPercentageWon;
 
 
     public void startGame (View view) {
@@ -243,10 +267,12 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
         Log.i(TAG,"results: "+ matches.get(0));
         Toast.makeText(GameLive.this, s, Toast.LENGTH_LONG).show();
-        Log.i("what I said",s);
+        Log.i("serves",s);
         //add this s result(speech) to db data base in SQLite
         db.addRecord(new Speech(s));
+        checkIfServeStatus(s);
         gamePoints(s);
+        checkServeWon();
         speech.startListening(intent);
     }
 
@@ -298,93 +324,199 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         if ((s.contains("my")||s.contains("ma"))&& (s.contains("win")||s.contains("wie"))){
             myWinnerViewId.setText(Integer.toString(calc.addMyWinners()));
             updateMyScore();
+            flagMyWonPoint = true;
+            flagMyLostPoint = false;
         }
         if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
              (s.contains("fau")||s.contains("for")) &&
              (!s.contains("on")&&!s.contains("un")&&!s.contains("own")&&!s.contains("ya")) ){
             myForcedViewId.setText(Integer.toString(calc.addMyForced()));
             updateRivalScore();
+            flagMyWonPoint = false;
+            flagMyLostPoint = true;
         }
         if ((s.contains("my")||s.contains("ma"))&& (s.contains("un")||s.contains("ya")||s.contains("own")||s.contains("ton"))){
             myUnforcedViewId.setText(Integer.toString(calc.addMyUNForced()));
             updateRivalScore();
+            flagMyWonPoint = false;
+            flagMyLostPoint = true;
         }
         if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
                 (s.contains("win")||s.contains("wie")) ){
             rivalWinnerViewId.setText(Integer.toString(calc.addRivalWinners()));
             updateRivalScore();
+            flagMyWonPoint = false;
+            flagMyLostPoint = true;
         }
         if ((s.contains("ri")||s.contains("su")||s.contains("li")||s.contains("rh"))&&
-                (s.contains("fa")||s.contains("for")||s.contains("fi")||s.contains("fr")||s.contains("fl")) &&
+                (s.contains("fa")||s.contains("for")||s.contains("fr")||s.contains("fl")) &&
                 (!s.contains("on")&&!s.contains("un")&&!s.contains("own")&&!s.contains("ya")&&!s.contains("and")) ){
             rivalForcedViewId.setText(Integer.toString(calc.addRivalForced()));
             updateMyScore();
+            flagMyWonPoint = true;
+            flagMyLostPoint = false;
         }
         if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
                 (s.contains("un")||s.contains("ya")||s.contains("own")||s.contains("ton")||s.contains("and")) ){
             rivalUnforcedViewId.setText(Integer.toString(calc.addRivalUNForced()));
             updateMyScore();
+            flagMyWonPoint = true;
+            flagMyLostPoint = false;
         }
     }
 
-    //check if the word five (equal to my winner) is called. if yes, show this to the user and add this to TennisScorecalculates class)
+
+    public void checkIfServeStatus(String s) {
+        if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
+                (s.contains("1"))){
+            flagMyFirst = true;
+            flagMySecond = false;
+        }
+        if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
+                (s.contains("sec")||s.contains("2"))) {
+            flagMyFirst = false;
+            flagMySecond = true;
+        }
+        if ( (s.contains("ri")||s.contains("su")||s.contains("li")) &&
+                (s.contains("1"))){
+            flagRivalFirst = true;
+            flagRivalSecond = false;
+        }
+        if ( (s.contains("ri")||s.contains("su")||s.contains("li")) &&
+                (s.contains("sec")||s.contains("2"))) {
+            flagRivalFirst = false;
+            flagRivalSecond = true;
+        }
+    }
+
+    public void editServesStatus(){
+        if (countMyTotalFirst>0 || countMyTotalSecond>0){
+            myFirstPercentageIn = (countMyTotalFirst*100)/(countMyTotalFirst+countMyTotalSecond);
+            myFirstInViewId.setText(Float.toString(myFirstPercentageIn)+"%");
+
+        }
+        if (countMyTotalFirst>0){
+            myFirstPercentageWon = countMyFirst*100/countMyTotalFirst;
+            myFirstWonViewId.setText(Float.toString(myFirstPercentageWon)+"%");
+        }
+        if (countMyTotalSecond>0){
+            mySecondPercentageWon = countMySecond*100/countMyTotalSecond;
+            mySecondWonViewId.setText(Float.toString(mySecondPercentageWon)+"%");
+        }
+        if (countRivalTotalFirst>0 || countRivalTotalSecond>0){
+            rivalFirstPercentageIn = (countRivalTotalFirst*100)/(countRivalTotalFirst+countRivalTotalSecond);
+            rivalFirstInViewId.setText(Float.toString(rivalFirstPercentageIn)+"%");
+        }
+        if (countRivalTotalFirst>0){
+            rivalFirstPercentageWon = countRivalFirst*100/countRivalTotalFirst;
+            rivalFirstWonViewId.setText(Float.toString(rivalFirstPercentageWon)+"%");
+
+        }
+        if (countRivalTotalSecond>0){
+            rivalSecondPercentageWon = countRivalSecond*100/countRivalTotalSecond;
+            rivalSecondWonViewId.setText(Float.toString(rivalSecondPercentageWon)+"%");
+        }
+
+    }
+
+    public void zeroFlags (){
+        flagMyWonPoint = false;
+        flagMyFirst = false;
+        flagRivalFirst = false;
+        flagMyLostPoint = false;
+        flagMySecond = false;
+        flagRivalSecond = false;
+    }
+
+    public void checkServeWon () {
+        Log.i("my flag first serves", Boolean.toString(flagMyFirst));
+        Log.i("my flag second serves", Boolean.toString(flagMySecond));
+        Log.i("my flag won serves", Boolean.toString(flagMyWonPoint));
+        Log.i("my flag lost serves", Boolean.toString(flagMyLostPoint));
+
+        if (flagMyWonPoint == true && flagMyFirst == true) {
+            Log.i("serves", "won point && myFirst");
+            countMyFirst = calc.addMyFirst();
+            countMyTotalFirst = calc.addMyTotalFirst();
+            editServesStatus();
+            zeroFlags();
+        }
+
+        if (flagMyLostPoint == true && flagMyFirst == true) {
+            Log.i("serves", "lost point && myFirst");
+            countMyTotalFirst = calc.addMyTotalFirst();
+            editServesStatus();
+            zeroFlags();
+        }
+
+        if (flagMyWonPoint == true && flagMySecond == true) {
+            Log.i("serves", "won point && mySecond");
+            countMySecond = calc.addMySecond();
+            countMyTotalSecond = calc.addMyTotalSecond();
+            editServesStatus();
+            zeroFlags();
+        }
+
+        if (flagMyLostPoint == true && flagMySecond == true) {
+            Log.i("serves", "lost point && mySecond");
+            countMyTotalSecond = calc.addMyTotalSecond();
+            editServesStatus();
+            zeroFlags();
+        }
+
+        //Rival serves
+
+        if (flagMyWonPoint == true && flagRivalFirst == true) {
+            countRivalTotalFirst = calc.addRivalTotalFirst();
+            editServesStatus();
+            zeroFlags();
+        }
+
+        if (flagMyLostPoint == true && flagRivalFirst == true) {
+            countRivalFirst = calc.addRivalFirst();
+            countRivalTotalFirst = calc.addRivalTotalFirst();
+            editServesStatus();
+            zeroFlags();
+        }
+
+        if (flagMyWonPoint == true && flagRivalSecond == true) {
+            countRivalTotalSecond = calc.addRivalTotalSecond();
+            editServesStatus();
+            zeroFlags();
+        }
+
+        if (flagMyLostPoint == true && flagRivalSecond == true) {
+            countRivalSecond = calc.addRivalSecond();
+            countRivalTotalSecond = calc.addRivalTotalSecond();
+            editServesStatus();
+            zeroFlags();
+        }
+
+    }
 
     /*
-    public void gameMyWinners(){
-        String myWinner = "five";
-        //check if there is a row in SQLite db that LIKE "five". If yes, count it.
-        int speechCountsMyWinners = db.getSpeechCountByWord(myWinner);
-        TextView myWinnerViewId = (TextView)findViewById(R.id.myWinnerId);
-        //show to the user the number of times there is five in SQLite db
-        myWinnerViewId.setText(Integer.toString(speechCountsMyWinners));
-        //add the number of times there is five in the db to cala class (TennisScoreCalculates)
-        calc.addMyWinners(speechCountsMyWinners);
+    public void netWon (String s) {
+
+        TextView myNet = (TextView)findViewById(R.id.myNetId);
+        TextView rivalNet = (TextView)findViewById(R.id.rivalNetId);
+
+        if (s.contains("five") || s.contains("nine") || s.contains("eleven")) {
+            Outside.flagNet = true;
+        }
+        if (s.contains("eight") || s.contains("six") || s.contains("seven")) {
+            Outside.flagNet = false;
+        }
+
+        if ((Outside.flagNet == true) && s.contains("net")) {
+            Outside.countMyNet += 1;
+        }
+        if ((Outside.flagNet == false) && s.contains("net")) {
+            Outside.countRivalNet += 1;
+        }
+        myNet.setText(Integer.toString(Outside.countMyNet)+"/"+Integer.toString(Outside.countMyNet+Outside.countRivalNet));
     }
+    */
 
-
-    public void gameMyForced() {
-        String myForced = "six";
-        int speechCountsMyForced = db.getSpeechCountByWord(myForced);
-        TextView myForcedViewId = (TextView)findViewById(R.id.myForcedId);
-        myForcedViewId.setText(Integer.toString(speechCountsMyForced));
-        calc.addMyForced(speechCountsMyForced);
-
-    }
-
-    public void gameMyUnforced(){
-        String myUnforced = "seven";
-        int speechCountsMyUnforced = db.getSpeechCountByWord(myUnforced);
-        TextView myUnforcedViewId = (TextView)findViewById(R.id.myUnforcedId);
-        myUnforcedViewId.setText(Integer.toString(speechCountsMyUnforced));
-        calc.addMyUNForced(speechCountsMyUnforced);
-
-    }
-
-    public void gameRivalWinners(){
-        String rivalWinner = "eight";
-        int speechCountsRivalWinners = db.getSpeechCountByWord(rivalWinner);
-        TextView rivalWinnerViewId = (TextView)findViewById(R.id.rivalWinnerId);
-        rivalWinnerViewId.setText(Integer.toString(speechCountsRivalWinners));
-        calc.addRivalWinners(speechCountsRivalWinners);
-
-    }
-
-    public void gameRivalForced(){
-        String rivalForced = "nine";
-        int speechCountsRivalForced = db.getSpeechCountByWord(rivalForced);
-        TextView rivalForcedViewId = (TextView)findViewById(R.id.rivalForcedId);
-        rivalForcedViewId.setText(Integer.toString(speechCountsRivalForced));
-        calc.addRivalForced(speechCountsRivalForced);
-
-    }
-
-    public void gameRivalUnforced(){
-        String rivalUnforced = "eleven";
-        int speechCountsRivalUnforced = db.getSpeechCountByWord(rivalUnforced);
-        TextView rivalUnforcedViewId = (TextView)findViewById(R.id.rivalUnforcedId);
-        rivalUnforcedViewId.setText(Integer.toString(speechCountsRivalUnforced));
-        calc.addRivalUNForced(speechCountsRivalUnforced);
-    }*/
 
     public void updateMyScore(){
         calc.addMyPoint();
@@ -460,6 +592,20 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         rivalWinnerViewId = (TextView)findViewById(R.id.rivalWinnerId);
         rivalForcedViewId = (TextView)findViewById(R.id.rivalForcedId);
         rivalUnforcedViewId = (TextView)findViewById(R.id.rivalUnforcedId);
+        myAcesViewId = (TextView)findViewById(R.id.myAcesId);
+        rivalAcesViewId = (TextView)findViewById(R.id.rivalAcesId);
+        myDoublesViewId = (TextView)findViewById(R.id.myDoubleFaultsId);
+        rivalDoublesViewId = (TextView)findViewById(R.id.rivalDoubleFaultsId);
+        myFirstInViewId = (TextView)findViewById(R.id.myServeInId);
+        rivalFirstInViewId = (TextView)findViewById(R.id.rivalServeInId);
+        myFirstWonViewId = (TextView)findViewById(R.id.myFirstServeId);
+        rivalFirstWonViewId= (TextView)findViewById(R.id.rivalFirstServeId);
+        mySecondWonViewId = (TextView)findViewById(R.id.mySecondServeId);
+        rivalSecondWonViewId = (TextView)findViewById(R.id.rivalSecondServeId);
+        myNetViewId = (TextView)findViewById(R.id.myNetId);
+        rivalNetViewId = (TextView)findViewById(R.id.rivalNetId);
+
+        zeroFlags();
 
         //test for score method
         calc = new TennisScoreCalculates();

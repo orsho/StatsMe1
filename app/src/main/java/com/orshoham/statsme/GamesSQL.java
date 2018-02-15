@@ -23,8 +23,10 @@ public class GamesSQL {
     private int rivalAces;
     private int myDoubles;
     private int rivalDoubles;
-    private int myServes;
-    private int rivalServes;
+    private int myTotalFirst;
+    private int rivalTotalFirst;
+    private int myTotalSecond;
+    private int rivalTotalSecond;
     private int myFirst;
     private int rivalFirst;
     private int mySecond;
@@ -56,14 +58,16 @@ public class GamesSQL {
         this.rivalAces=oneGame[14];
         this.myDoubles=oneGame[15];
         this.rivalDoubles=oneGame[16];
-        this.myServes=oneGame[17];
-        this.rivalServes=oneGame[18];
-        this.myFirst=oneGame[19];
-        this.rivalFirst=oneGame[20];
-        this.mySecond=oneGame[21];
-        this.rivalSecond=oneGame[22];
-        this.myNet=oneGame[23];
-        this.rivalNet=oneGame[24];
+        this.myTotalFirst=oneGame[17];
+        this.rivalTotalFirst=oneGame[18];
+        this.myTotalSecond=oneGame[19];
+        this.rivalTotalSecond=oneGame[20];
+        this.myFirst=oneGame[21];
+        this.rivalFirst=oneGame[22];
+        this.mySecond=oneGame[23];
+        this.rivalSecond=oneGame[24];
+        this.myNet=oneGame[25];
+        this.rivalNet=oneGame[26];
 
     }
 
@@ -147,12 +151,20 @@ public class GamesSQL {
         this.rivalDoubles=rivalDoubles;
     }
 
-    public void setMyServes(int myServes){
-        this.myServes=myServes;
+    public void setMyTotalFirst(int myTotalFirst){
+        this.myTotalFirst=myTotalFirst;
     }
 
-    public void setRivalServes(int rivalServes){
-        this.rivalServes=rivalServes;
+    public void setRivalTotalFirst(int rivalTotalFirst){
+        this.rivalTotalFirst=rivalTotalFirst;
+    }
+
+    public void setMyTotalSecond(int myTotalSecond){
+        this.myTotalSecond=myTotalSecond;
+    }
+
+    public void setRivalTotalSecond(int rivalTotalSecond){
+        this.rivalTotalSecond=rivalTotalSecond;
     }
 
     public void setMyFirst(int myFirst){
@@ -256,12 +268,20 @@ public class GamesSQL {
         return rivalDoubles;
     }
 
-    public int getMyServes(){
-        return myServes;
+    public int getMyTotalFirst(){
+        return myTotalFirst;
     }
 
-    public int getRivalServes(){
-        return rivalServes;
+    public int getRivalTotalFirst(){
+        return rivalTotalFirst;
+    }
+
+    public int getMyTotalSecond(){
+        return myTotalSecond;
+    }
+
+    public int getRivalTotalSecond(){
+        return rivalTotalSecond;
     }
 
     public int getMyFirst(){
