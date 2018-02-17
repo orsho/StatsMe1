@@ -58,6 +58,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     private Button mStopButton;
     Boolean playIsOn = false;
 
+    private long time;
+
     ImageView userImageProfileView;
     ImageView rivalImageProfileView;
 
@@ -65,7 +67,6 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     TextView myScore;
     TextView rivalScore;
     TextView totalScoreSet;
-
     TextView myWinnerViewId;
     TextView myForcedViewId;
     TextView myUnforcedViewId;
@@ -102,12 +103,12 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     int countRivalTotalSecond = 0;
 
 
-    float myFirstPercentageIn;
-    float rivalFirstPercentageIn;
-    float myFirstPercentageWon;
-    float mySecondPercentageWon;
-    float rivalFirstPercentageWon;
-    float rivalSecondPercentageWon;
+    int myFirstPercentageIn;
+    int rivalFirstPercentageIn;
+    int myFirstPercentageWon;
+    int mySecondPercentageWon;
+    int rivalFirstPercentageWon;
+    int rivalSecondPercentageWon;
 
 
     public void startGame (View view) {
@@ -163,7 +164,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL()));
+                        sendTimeGame();
+                        dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL(), time));
                         //Tab1MyProfile tab1 = new Tab1MyProfile();
                         //tab1.update();
                         db.deleteDb();
@@ -184,13 +186,20 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         alert.show();
     }
 
+    public void sendTimeGame (){
+        time = SystemClock.elapsedRealtime() - myTimeCount.getBase();
+        Log.i("my time", Long.toString(time));
+        calc.setGameTime(time);
+    }
+
     public void declareWin(String winLose){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("You "+winLose)
                 .setCancelable(false)
                 .setPositiveButton("Back To Menu", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL()));
+                        sendTimeGame();
+                        dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL(), time));
                         db.deleteDb();
                         finish();
                     }
@@ -272,6 +281,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         db.addRecord(new Speech(s));
         checkIfServeStatus(s);
         gamePoints(s);
+        netWon(s);
         checkServeWon();
         speech.startListening(intent);
     }
@@ -320,7 +330,37 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
     }
 
+    //check if user won or lost the point, check if it winner/forced/ace..., count those results in the database
+    // and show the results to the user
     public void gamePoints(String s) {
+        if ((s.contains("my")||s.contains("ma"))&&
+                (s.contains("ace")||s.contains("ice")||s.contains("ase"))){
+            myAcesViewId.setText(Integer.toString(calc.addMyAces()));
+            updateMyScore();
+            flagMyWonPoint = true;
+            flagMyLostPoint = false;
+        }
+        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
+                (s.contains("ace")||s.contains("ice")||s.contains("ase"))){
+            rivalAcesViewId.setText(Integer.toString(calc.addRivalAces()));
+            updateRivalScore();
+            flagMyWonPoint = false;
+            flagMyLostPoint = true;
+        }
+        if ((s.contains("my")||s.contains("ma"))&&
+                (s.contains("do")||s.contains("du")||s.contains("dev"))){
+            myDoublesViewId.setText(Integer.toString(calc.addMyDoubles()));
+            updateRivalScore();
+            flagMyWonPoint = false;
+            flagMyLostPoint = true;
+        }
+        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
+                (s.contains("do")||s.contains("du")||s.contains("dev"))){
+            rivalDoublesViewId.setText(Integer.toString(calc.addRivalDoubles()));
+            updateMyScore();
+            flagMyWonPoint = true;
+            flagMyLostPoint = false;
+        }
         if ((s.contains("my")||s.contains("ma"))&& (s.contains("win")||s.contains("wie"))){
             myWinnerViewId.setText(Integer.toString(calc.addMyWinners()));
             updateMyScore();
@@ -335,7 +375,8 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             flagMyWonPoint = false;
             flagMyLostPoint = true;
         }
-        if ((s.contains("my")||s.contains("ma"))&& (s.contains("un")||s.contains("ya")||s.contains("own")||s.contains("ton"))){
+        if ((s.contains("my")||s.contains("ma"))&&
+                (s.contains("un")||s.contains("own")||s.contains("ton"))){
             myUnforcedViewId.setText(Integer.toString(calc.addMyUNForced()));
             updateRivalScore();
             flagMyWonPoint = false;
@@ -349,7 +390,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             flagMyLostPoint = true;
         }
         if ((s.contains("ri")||s.contains("su")||s.contains("li")||s.contains("rh"))&&
-                (s.contains("fa")||s.contains("for")||s.contains("fr")||s.contains("fl")) &&
+                (s.contains("fa")||s.contains("for")||s.contains("fr")) &&
                 (!s.contains("on")&&!s.contains("un")&&!s.contains("own")&&!s.contains("ya")&&!s.contains("and")) ){
             rivalForcedViewId.setText(Integer.toString(calc.addRivalForced()));
             updateMyScore();
@@ -357,7 +398,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             flagMyLostPoint = false;
         }
         if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
-                (s.contains("un")||s.contains("ya")||s.contains("own")||s.contains("ton")||s.contains("and")) ){
+                (s.contains("un")||s.contains("own")||s.contains("ton")||s.contains("and")) ){
             rivalUnforcedViewId.setText(Integer.toString(calc.addRivalUNForced()));
             updateMyScore();
             flagMyWonPoint = true;
@@ -365,10 +406,34 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         }
     }
 
+    //check if the user or rival made net and the result depend if won or lost the point
+    public void netWon (String s) {
 
+        if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
+                (s.contains("net"))) {
+            calc.addMyTotalNet();
+            if (flagMyWonPoint==true){
+                calc.addMyNet();
+            }
+        }
+        if ( (s.contains("ri")||s.contains("su")||s.contains("li")) &&
+                (s.contains("net"))) {
+            calc.addRivalTotalNet();
+            if (flagMyLostPoint==true){
+                calc.addRivalNet();
+            }
+        }
+        Log.i("net total check", Integer.toString(calc.getMyTotalNet()));
+        Log.i("net check", Integer.toString(calc.getMyNet()));
+        Log.i("net flag check", Boolean.toString(flagMyWonPoint));
+        myNetViewId.setText(Integer.toString(calc.getMyNet())+"/"+Integer.toString(calc.getMyTotalNet()));
+        rivalNetViewId.setText(Integer.toString(calc.getRivalNet())+"/"+Integer.toString(calc.getRivalTotalNet()));
+    }
+
+    //check if the user or rival in his first serve or second serve
     public void checkIfServeStatus(String s) {
         if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
-                (s.contains("1"))){
+                (s.contains("1")||s.contains("one"))){
             flagMyFirst = true;
             flagMySecond = false;
         }
@@ -378,7 +443,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             flagMySecond = true;
         }
         if ( (s.contains("ri")||s.contains("su")||s.contains("li")) &&
-                (s.contains("1"))){
+                (s.contains("1")||s.contains("one"))){
             flagRivalFirst = true;
             flagRivalSecond = false;
         }
@@ -389,36 +454,38 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         }
     }
 
+    //calculate the serves numbers for user and rival and show it to the user
     public void editServesStatus(){
         if (countMyTotalFirst>0 || countMyTotalSecond>0){
-            myFirstPercentageIn = (countMyTotalFirst*100)/(countMyTotalFirst+countMyTotalSecond);
-            myFirstInViewId.setText(Float.toString(myFirstPercentageIn)+"%");
+            myFirstPercentageIn = Math.round(countMyTotalFirst*100)/(countMyTotalFirst+countMyTotalSecond);
+            myFirstInViewId.setText(Integer.toString(myFirstPercentageIn)+"%");
 
         }
         if (countMyTotalFirst>0){
-            myFirstPercentageWon = countMyFirst*100/countMyTotalFirst;
-            myFirstWonViewId.setText(Float.toString(myFirstPercentageWon)+"%");
+            myFirstPercentageWon = Math.round(countMyFirst*100/countMyTotalFirst);
+            myFirstWonViewId.setText(Integer.toString(myFirstPercentageWon)+"%");
         }
         if (countMyTotalSecond>0){
-            mySecondPercentageWon = countMySecond*100/countMyTotalSecond;
-            mySecondWonViewId.setText(Float.toString(mySecondPercentageWon)+"%");
+            mySecondPercentageWon = Math.round(countMySecond*100/countMyTotalSecond);
+            mySecondWonViewId.setText(Integer.toString(mySecondPercentageWon)+"%");
         }
         if (countRivalTotalFirst>0 || countRivalTotalSecond>0){
-            rivalFirstPercentageIn = (countRivalTotalFirst*100)/(countRivalTotalFirst+countRivalTotalSecond);
-            rivalFirstInViewId.setText(Float.toString(rivalFirstPercentageIn)+"%");
+            rivalFirstPercentageIn = Math.round((countRivalTotalFirst*100)/(countRivalTotalFirst+countRivalTotalSecond));
+            rivalFirstInViewId.setText(Integer.toString(rivalFirstPercentageIn)+"%");
         }
         if (countRivalTotalFirst>0){
-            rivalFirstPercentageWon = countRivalFirst*100/countRivalTotalFirst;
-            rivalFirstWonViewId.setText(Float.toString(rivalFirstPercentageWon)+"%");
+            rivalFirstPercentageWon = Math.round(countRivalFirst*100/countRivalTotalFirst);
+            rivalFirstWonViewId.setText(Integer.toString(rivalFirstPercentageWon)+"%");
 
         }
         if (countRivalTotalSecond>0){
-            rivalSecondPercentageWon = countRivalSecond*100/countRivalTotalSecond;
-            rivalSecondWonViewId.setText(Float.toString(rivalSecondPercentageWon)+"%");
+            rivalSecondPercentageWon = Math.round(countRivalSecond*100/countRivalTotalSecond);
+            rivalSecondWonViewId.setText(Integer.toString(rivalSecondPercentageWon)+"%");
         }
 
     }
 
+    //turn all flags to zero (happens when starting a new point)
     public void zeroFlags (){
         flagMyWonPoint = false;
         flagMyFirst = false;
@@ -428,6 +495,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         flagRivalSecond = false;
     }
 
+    //check if the user or rival won the first/second serve
     public void checkServeWon () {
         Log.i("my flag first serves", Boolean.toString(flagMyFirst));
         Log.i("my flag second serves", Boolean.toString(flagMySecond));
@@ -494,33 +562,15 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
     }
 
-    /*
-    public void netWon (String s) {
-
-        TextView myNet = (TextView)findViewById(R.id.myNetId);
-        TextView rivalNet = (TextView)findViewById(R.id.rivalNetId);
-
-        if (s.contains("five") || s.contains("nine") || s.contains("eleven")) {
-            Outside.flagNet = true;
-        }
-        if (s.contains("eight") || s.contains("six") || s.contains("seven")) {
-            Outside.flagNet = false;
-        }
-
-        if ((Outside.flagNet == true) && s.contains("net")) {
-            Outside.countMyNet += 1;
-        }
-        if ((Outside.flagNet == false) && s.contains("net")) {
-            Outside.countRivalNet += 1;
-        }
-        myNet.setText(Integer.toString(Outside.countMyNet)+"/"+Integer.toString(Outside.countMyNet+Outside.countRivalNet));
-    }
-    */
-
-
+    //add point to user and show it. also check if user won the game
     public void updateMyScore(){
         calc.addMyPoint();
-        myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
+        if (calc.getMyGamePoint()==45){
+            myScore.setText("you A");
+        }
+        else{
+            myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
+        }
         rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
         totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
         if(calc.checkWin() == true){
@@ -528,10 +578,16 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         }
     }
 
+    //add point to rival and show it. also check if rival won the game
     public void updateRivalScore(){
         calc.addRivalPoint();
         myScore.setText("you "+Integer.toString(calc.getMyGamePoint()));
-        rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
+        if (calc.getRivalGamePoint()==45){
+            rivalScore.setText("rival A");
+        }
+        else{
+            rivalScore.setText("rival "+Integer.toString(calc.getRivalGamePoint()));
+        }
         totalScoreSet.setText(Integer.toString(calc.getMyGameScore())+":"+Integer.toString(calc.getRivalGameScore()));
         if(calc.checkWin() == true){
             declareWin("Lost.. maybe next time");

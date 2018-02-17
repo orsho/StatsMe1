@@ -74,7 +74,7 @@ public class FirebaseGame extends AppCompatActivity {
             }
         });
     }
-
+/*
     //add to firebase game point for the user (sort by set->game->game score->game point)
     static void addMyGamePointFirebase(final int countSets,final int countGames, final int countPoints, final int myGameScore, final int myGamePoint){
             mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {
@@ -113,7 +113,7 @@ public class FirebaseGame extends AppCompatActivity {
             }
         });
     }
-
+*/
     //add number of times there is myWinner in a specific set
     static void addMyWinnersFirebase (final int countSets, final int countMyWinners){
         mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addValueEventListener(new ValueEventListener() {

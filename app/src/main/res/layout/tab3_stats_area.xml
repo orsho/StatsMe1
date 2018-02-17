@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,11 +9,42 @@
     android:background="@color/color3"
     tools:context="com.orshoham.statsme.StartActivity$PlaceholderFragment">
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph1Id"
+            android:layout_width="350dp"
+            android:layout_height="400dp"
+            android:layout_gravity="center_horizontal" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph2Id"
+            android:layout_width="350dp"
+            android:layout_height="400dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph3Id"
+            android:layout_width="350dp"
+            android:layout_height="400dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <!--
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -24,5 +55,6 @@
         android:text="We are sorry \nThis page is not ready yet"
         android:textAlignment="center"
         android:textSize="24sp" />
+        !-->
 
-</RelativeLayout>
+</ScrollView>

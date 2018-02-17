@@ -5,10 +5,12 @@ import android.util.Log;
 import java.util.List;
 
 public class StatsTab1 extends Tab1MyProfile {
-    private double avgWinners=0;
-    private double sumWinners=0;
-    private double avgUNForced=0;
-    private double sumUNForced=0;
+    private int avgWinners=0;
+    private int sumWinners=0;
+    private int avgUNForced=0;
+    private int sumUNForced=0;
+    private int avgAces=0;
+    private int sumAces=0;
     private int sumWins=0;
     private int sumLoss=0;
 
@@ -41,29 +43,42 @@ public class StatsTab1 extends Tab1MyProfile {
     }
 
 
-    public double avgWinnersPG (DBGames dbGames){
+    public int avgWinnersPG (DBGames dbGames){
         List<GamesSQL> gameList = dbGames.getAllGames();
 
         for(int i=0;i<gameList.size();i++){
             sumWinners=sumWinners+gameList.get(i).getMyWinners();
         }
         if (sumWinners>0){
-            avgWinners=(Math.round(1.0 *sumWinners)/(gameList.size()));
+            avgWinners=Math.round(sumWinners)/(gameList.size());
         }
         return avgWinners;
 
     }
 
-    public double avgUNForcedPG (DBGames dbGames){
+    public int avgUNForcedPG (DBGames dbGames){
         List<GamesSQL> gameList = dbGames.getAllGames();
 
         for(int i=0;i<gameList.size();i++){
             sumUNForced=sumUNForced+gameList.get(i).getMyUNForced();
         }
         if (sumUNForced>0){
-            avgUNForced=(1.0 * sumUNForced/(gameList.size()));
+            avgUNForced=Math.round(sumUNForced/gameList.size());
         }
         return avgUNForced;
+
+    }
+
+    public int avgAcesPG (DBGames dbGames){
+        List<GamesSQL> gameList = dbGames.getAllGames();
+
+        for(int i=0;i<gameList.size();i++){
+            sumAces=sumAces+gameList.get(i).getMyAces();
+        }
+        if (sumAces>0){
+            avgAces=Math.round(sumAces/gameList.size());
+        }
+        return avgAces;
 
     }
 

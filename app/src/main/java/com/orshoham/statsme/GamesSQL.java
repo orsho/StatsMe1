@@ -1,6 +1,7 @@
 package com.orshoham.statsme;
 
 import android.util.Log;
+import android.widget.Chronometer;
 
 public class GamesSQL {
 
@@ -31,14 +32,17 @@ public class GamesSQL {
     private int rivalFirst;
     private int mySecond;
     private int rivalSecond;
+    private int myTotalNet;
+    private int rivalTotalNet;
     private int myNet;
     private int rivalNet;
+    private long myTimeCount;
 
     /*
     public GamesSQL(int mySet1, int rivalSet1, int mySet2, int rivalSet2, int mySet3, int rivalSet3,
                     int myWinners, int myForced, int myUNForced, int rivalWinners, int rivalForced, int rivalUNForced)
     {*/
-    public GamesSQL(int[] oneGame){
+    public GamesSQL(int[] oneGame, long time){
         this.id=id;
         this.gameNumber=0;
         this.mySet1=oneGame[0];
@@ -66,8 +70,11 @@ public class GamesSQL {
         this.rivalFirst=oneGame[22];
         this.mySecond=oneGame[23];
         this.rivalSecond=oneGame[24];
-        this.myNet=oneGame[25];
-        this.rivalNet=oneGame[26];
+        this.myTotalNet=oneGame[25];
+        this.rivalTotalNet=oneGame[26];
+        this.myNet=oneGame[27];
+        this.rivalNet=oneGame[28];
+        this.myTimeCount=time;
 
     }
 
@@ -183,12 +190,25 @@ public class GamesSQL {
         this.rivalSecond=rivalSecond;
     }
 
+    public void setMyTotalNet(int myTotalNet){
+        this.myTotalNet=myTotalNet;
+    }
+
+    public void setRivalTotalNet(int rivalTotalNet){
+        this.rivalTotalNet=rivalTotalNet;
+    }
+
+
     public void setMyNet(int myNet){
         this.myNet=myNet;
     }
 
     public void setRivalNet(int rivalNet){
         this.rivalNet=rivalNet;
+    }
+
+    public void setTime(long time){
+        this.myTimeCount=time;
     }
 
 
@@ -300,12 +320,24 @@ public class GamesSQL {
         return rivalSecond;
     }
 
+    public int getMyTotalNet(){
+        return myTotalNet;
+    }
+
+    public int getRivalTotalNet(){
+        return rivalTotalNet;
+    }
+
     public int getMyNet(){
         return myNet;
     }
 
     public int getRivalNet(){
         return rivalNet;
+    }
+
+    public long getTime(){
+        return myTimeCount;
     }
 }
 

@@ -61,6 +61,13 @@ public class Tab4Settings extends Fragment {
                                     int position, long id) {
                 // TODO Auto-generated method stub
                 Log.i("position", Integer.toString(position));
+                if (position == 2){
+                    Intent i=new Intent(android.content.Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(android.content.Intent.EXTRA_SUBJECT,"Subject test");
+                    i.putExtra(android.content.Intent.EXTRA_TEXT, "Hey! this text has sent from StatsMe");
+                    startActivity(Intent.createChooser(i,"Share via"));
+                }
                 if (position == 4){
                     Intent intent = new Intent(getActivity(), Tab4About.class);
                     startActivity(intent);

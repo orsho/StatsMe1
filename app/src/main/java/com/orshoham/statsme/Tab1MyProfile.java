@@ -91,6 +91,7 @@ public class Tab1MyProfile extends Fragment  {
     private TextView numberOfWinsView;
     private TextView avgWinnersView;
     private TextView avgUNForcedView;
+    private TextView avgAcesView;
 
     DBGames dbGames;
 
@@ -322,6 +323,7 @@ public class Tab1MyProfile extends Fragment  {
         gamesListView = (ListView) rootView.findViewById(R.id.gamesListView);
         final ArrayList<String> gamesPlayedList = new ArrayList<>();
 
+        //define arrayAdapter and also colored the game status (red for lost, blue for win, black for game that didnt end)
         final ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, gamesPlayedList){
         @Override
         //color the text if win or loss
@@ -400,10 +402,11 @@ public class Tab1MyProfile extends Fragment  {
         numberOfWinsView = (TextView) rootView.findViewById(R.id.profile_stats3);
         numberOfWinsView.setText("#LOSSES: "+ Integer.toString(mainStats.checkSumLosses(dbGames)));
         avgWinnersView = (TextView) rootView.findViewById(R.id.profile_stats4);
-        avgWinnersView.setText("AVG WINNERS PG: "+ Double.toString(mainStats.avgWinnersPG(dbGames)));
-        Log.i("avg winners", Double.toString(mainStats.avgWinnersPG(dbGames)));
+        avgWinnersView.setText("AVG WINNERS PG: "+ Integer.toString(mainStats.avgWinnersPG(dbGames)));
         avgUNForcedView = (TextView) rootView.findViewById(R.id.profile_stats5);
-        avgUNForcedView.setText("AVG UF PG: "+ Double.toString(mainStats.avgUNForcedPG(dbGames)));
+        avgUNForcedView.setText("AVG UF PG: "+ Integer.toString(mainStats.avgUNForcedPG(dbGames)));
+        avgAcesView = (TextView) rootView.findViewById(R.id.profile_stats6);
+        avgAcesView.setText("AVG UF PG: "+ Integer.toString(mainStats.avgAcesPG(dbGames)));
 
 
 

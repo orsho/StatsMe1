@@ -47,8 +47,11 @@ public class DBGames extends SQLiteOpenHelper {
     public static final String KEY_RIVALFIRST_NUMBER = "rival_first_score";
     public static final String KEY_MYSECOND_NUMBER = "my_second_score";
     public static final String KEY_RIVALSECOND_NUMBER = "rival_second_score";
+    public static final String KEY_MYTOTALNET_NUMBER = "my_total_net_score";
+    public static final String KEY_RIVALTOTALNET_NUMBER = "rival_total_net_score";
     public static final String KEY_MYNET_NUMBER = "my_net_score";
     public static final String KEY_RIVALNET_NUMBER = "rival_net_score";
+    public static final String KEY_TIME = "time";
 
 
     public DBGames(Context context) {
@@ -141,9 +144,12 @@ public class DBGames extends SQLiteOpenHelper {
         values.put(KEY_RIVALFIRST_NUMBER, game.getMyFirst());
         values.put(KEY_MYSECOND_NUMBER, game.getMySecond());
         values.put(KEY_RIVALSECOND_NUMBER, game.getMySecond());
+        values.put(KEY_MYTOTALNET_NUMBER, game.getMyTotalNet());
+        values.put(KEY_RIVALTOTALNET_NUMBER, game.getRivalTotalNet());
         values.put(KEY_MYNET_NUMBER, game.getMyNet());
         values.put(KEY_RIVALNET_NUMBER, game.getRivalNet());
-        Log.i("winorloss insert", Integer.toString(game.getWinOrLoss()));
+        values.put(KEY_TIME, game.getTime());
+        Log.i("myTotalNet insert", Integer.toString(game.getMyTotalNet()));
         // Inserting Row
         db.insert(TABLE_GAMES, null, values);
         db.close(); // Closing database connection
@@ -199,9 +205,12 @@ public class DBGames extends SQLiteOpenHelper {
                 game.setRivalFirst(cursor.getInt(24));
                 game.setMySecond(cursor.getInt(25));
                 game.setRivalSecond(cursor.getInt(26));
-                game.setMyNet(cursor.getInt(27));
-                game.setRivalNet(cursor.getInt(28));
-                Log.i("winorloss (loopDB)", Integer.toString(cursor.getInt(14)));
+                game.setMyTotalNet(cursor.getInt(27));
+                game.setRivalTotalNet(cursor.getInt(28));
+                game.setMyNet(cursor.getInt(29));
+                game.setRivalNet(cursor.getInt(30));
+                game.setTime(cursor.getInt(31));
+                Log.i("my total time (loopDB)", Integer.toString(cursor.getInt(31)));
                 // Adding to list
                 gameList.add(game);
             } while (cursor.moveToNext());
@@ -271,8 +280,11 @@ public class DBGames extends SQLiteOpenHelper {
                 + KEY_RIVALFIRST_NUMBER + " INTEGER, "
                 + KEY_MYSECOND_NUMBER + " INTEGER, "
                 + KEY_RIVALSECOND_NUMBER + " INTEGER, "
+                + KEY_MYTOTALNET_NUMBER + " INTEGER, "
+                + KEY_RIVALTOTALNET_NUMBER + " INTEGER, "
                 + KEY_MYNET_NUMBER + " INTEGER, "
-                + KEY_RIVALNET_NUMBER + " INTEGER "
+                + KEY_RIVALNET_NUMBER + " INTEGER, "
+                + KEY_TIME + " LONG "
                 + ");";
         Log.i("createDB=", sqlGames);
         db.execSQL(sqlGames);

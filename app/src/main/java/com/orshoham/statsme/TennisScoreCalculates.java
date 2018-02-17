@@ -35,8 +35,11 @@ public class TennisScoreCalculates {
     int countRivalFirst = 0;
     int countMySecond = 0;
     int countRivalSecond = 0;
+    int countMyTotalNet = 0;
+    int countRivalTotalNet = 0;
     int countMyNet = 0;
     int countRivalNet = 0;
+    long time=0;
 
     int winOrLoss = 3;
 
@@ -132,6 +135,14 @@ public class TennisScoreCalculates {
         return countRivalSecond;
     }
 
+    public int getMyTotalNet(){
+        return countMyTotalNet;
+    }
+
+    public int getRivalTotalNet(){
+        return countRivalTotalNet;
+    }
+
     public int getMyNet(){
         return countMyNet;
     }
@@ -140,49 +151,53 @@ public class TennisScoreCalculates {
         return countRivalNet;
     }
 
+    public long getTime(){
+        return time;
+    }
+
 
     public void addMyPoint() {
         countPoints++;
         if (tieBreakFlag == false){
             if (myGamePoint == 0){
                 myGamePoint = 15;
-                uploadPoint(true);
+                //uploadPoint(true);
             }
             else if (myGamePoint == 15){
                 myGamePoint = 30;
-                uploadPoint(true);
+                //uploadPoint(true);
             }
             else if (myGamePoint == 30){
                 myGamePoint = 40;
-                uploadPoint(true);
+                //uploadPoint(true);
             }
             else if (myGamePoint == 40 && rivalGamePoint < 40){
                 myGamePoint = 0;
-                uploadPoint(true);
+                //uploadPoint(true);
                 rivalGamePoint = 0;
                 addMyGameScore();
             }
             else if (myGamePoint == 40 && rivalGamePoint == 40){
                 myGamePoint = 45;
-                uploadPoint(true);
+                //uploadPoint(true);
             }
             else if (myGamePoint == 40 && rivalGamePoint > 40){
                 rivalGamePoint = 40;
-                uploadPoint(false);
+                //uploadPoint(false);
             }
             else if (myGamePoint == 45 && rivalGamePoint == 40){
                 myGamePoint = 0;
-                uploadPoint(true);
+                //uploadPoint(true);
                 rivalGamePoint = 0;
                 addMyGameScore();
             }
         } else {
             if (myGamePoint<6){
                 myGamePoint++;
-                uploadPoint(true);
+                //uploadPoint(true);
             } else if (myGamePoint >= 6 && (myGamePoint-rivalGamePoint) >= 1){
                 myGamePoint = 0;
-                uploadPoint(true);
+                //uploadPoint(true);
                 rivalGamePoint = 0;
                 myGameScore[countSets] = 7;
                 countSets++;
@@ -190,7 +205,7 @@ public class TennisScoreCalculates {
                 tieBreakFlag = false;
             } else if (myGamePoint >= 6 && (myGamePoint-rivalGamePoint) < 1){
                 myGamePoint++;
-                uploadPoint(true);
+                //uploadPoint(true);
             }
         }
     }
@@ -200,44 +215,44 @@ public class TennisScoreCalculates {
         if (tieBreakFlag == false){
             if (rivalGamePoint == 0){
                 rivalGamePoint = 15;
-                uploadPoint(false);
+                //uploadPoint(false);
             }
             else if (rivalGamePoint == 15){
                 rivalGamePoint = 30;
-                uploadPoint(false);
+                //uploadPoint(false);
             }
             else if (rivalGamePoint == 30){
                 rivalGamePoint = 40;
-                uploadPoint(false);
+                //uploadPoint(false);
             }
             else if (rivalGamePoint == 40 && myGamePoint < 40){
                 rivalGamePoint = 0;
-                uploadPoint(false);
+                //uploadPoint(false);
                 myGamePoint = 0;
                 addRivalGameScore();
             }
             else if (rivalGamePoint == 40 && myGamePoint == 40){
                 rivalGamePoint = 45;
-                uploadPoint(false);
+                //uploadPoint(false);
             }
             else if (rivalGamePoint == 40 && myGamePoint > 40){
                 myGamePoint = 40;
-                uploadPoint(true);
+                //uploadPoint(true);
             }
             else if (rivalGamePoint == 45 && myGamePoint == 40){
                 myGamePoint = 0;
                 rivalGamePoint = 0;
-                uploadPoint(false);
+                //uploadPoint(false);
                 addRivalGameScore();
             }
         } else {
             if (rivalGamePoint<6){
                 rivalGamePoint++;
-                uploadPoint(false);
+                //uploadPoint(false);
             }
             else if (rivalGamePoint >= 6 && (rivalGamePoint-myGamePoint) >= 1){
                 rivalGamePoint = 0;
-                uploadPoint(false);
+                //uploadPoint(false);
                 myGamePoint = 0;
                 rivalGameScore[countSets] = 7;
                 countSets++;
@@ -246,7 +261,7 @@ public class TennisScoreCalculates {
             }
             else if (rivalGamePoint >= 6 && (rivalGamePoint-myGamePoint) < 1){
                 rivalGamePoint++;
-                uploadPoint(false);
+                //uploadPoint(false);
             }
         }
 
@@ -397,6 +412,16 @@ public class TennisScoreCalculates {
         return countRivalSecond;
     }
 
+    public int addMyTotalNet(){
+        countMyTotalNet++;
+        return countMyTotalNet;
+    }
+
+    public int addRivalTotalNet(){
+        countRivalTotalNet++;
+        return countRivalTotalNet;
+    }
+
     public int addMyNet(){
         countMyNet++;
         return countMyNet;
@@ -407,37 +432,10 @@ public class TennisScoreCalculates {
         return countRivalNet;
     }
 
-    /*
-    //upload the number of times there is five (myWinner) in SQLite to Firebase by sets
-    public void addMyWinners(int sqlCountMyWinners){
-        countMyWinners = sqlCountMyWinners;
-        FirebaseGame.addMyWinnersFirebase(countSets, countMyWinners);
+    public long setGameTime(long time){
+        return time;
     }
 
-    public void addMyForced(int sqlCountMyForced){
-        countMyForced = sqlCountMyForced;
-        FirebaseGame.addMyForcedFirebase(countSets, countMyForced);
-    }
-
-    public void addMyUNForced(int sqlCountMyUNForced){
-        countMyUNForced = sqlCountMyUNForced;
-        FirebaseGame.addMyUNForcedFirebase(countSets, countMyUNForced);
-    }
-
-    public void addRivalWinners(int sqlCountRivalWinners){
-        countRivalWinners = sqlCountRivalWinners;
-        FirebaseGame.addRivalWinnersFirebase(countSets, countRivalWinners);
-    }
-
-    public void addRivalForced(int sqlCountRivalForced){
-        countRivalForced = sqlCountRivalForced;
-        FirebaseGame.addRivalForcedFirebase(countSets, countRivalForced);
-    }
-
-    public void addRivalUNForced(int sqlCountRivalUNForced){
-        countRivalUNForced = sqlCountRivalUNForced;
-        FirebaseGame.addRivalUNForcedFirebase(countSets, countRivalUNForced);
-    }*/
 
     public boolean checkWin(){
         boolean flagCheckWin = false;
@@ -451,7 +449,7 @@ public class TennisScoreCalculates {
         }
         return flagCheckWin;
     }
-
+/*
     public void uploadPoint (boolean myPoint){
         if (myPoint == true){
             FirebaseGame.addMyGamePointFirebase(countSets,countGames,countPoints, myGameScore[countSets], myGamePoint);
@@ -460,6 +458,7 @@ public class TennisScoreCalculates {
         }
         FirebaseGame.updateFinalResults(mySetScore,rivalSetScore);
     }
+    */
 
     public void zeroAllStatsInFirebase(){
         for (int i=1;i<=3;i++){
@@ -475,7 +474,6 @@ public class TennisScoreCalculates {
     public int[] updateGameSQL()
     {
         GamesSQL game = new GamesSQL();
-        //game.setGameNumber();
         game.setMySet1(myGameScore[1]);
         game.setRivalSet1(rivalGameScore[1]);
         game.setMySet2(myGameScore[2]);
@@ -501,11 +499,14 @@ public class TennisScoreCalculates {
         game.setRivalFirst(getRivalFirst());
         game.setMySecond(getMySecond());
         game.setRivalSecond(getRivalSecond());
+        game.setMyTotalNet(getMyTotalNet());
+        game.setRivalTotalNet(getRivalTotalNet());
         game.setMyNet(getMyNet());
         game.setRivalNet(getRivalNet());
-        Log.i("winorloss Tennis", Integer.toString(getWinOrLoss()));
-        Log.i("winorloss SQL", Integer.toString(game.getWinOrLoss()));
-        int oneGame[] = new int[27];
+        game.setTime(getTime());
+        Log.i("time Tennis", Long.toString(getTime()));
+        Log.i("time SQL", Long.toString(game.getTime()));
+        int oneGame[] = new int[30];
         //oneGame[0]=game.getGameNumber();
         oneGame[0] = game.getMySet1();
         oneGame[1] = game.getRivalSet1();
@@ -532,8 +533,11 @@ public class TennisScoreCalculates {
         oneGame[22] = game.getRivalFirst();
         oneGame[23] = game.getMySecond();
         oneGame[24] = game.getRivalSecond();
-        oneGame[25] = game.getMyNet();
-        oneGame[26] = game.getRivalNet();
+        oneGame[25] = game.getMyTotalNet();
+        oneGame[26] = game.getRivalTotalNet();
+        oneGame[27] = game.getMyNet();
+        oneGame[28] = game.getRivalNet();
+
 
         return oneGame;
 
