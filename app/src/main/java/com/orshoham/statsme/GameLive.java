@@ -1,6 +1,11 @@
 package com.orshoham.statsme;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.media.Image;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.app.AlertDialog;
@@ -35,7 +40,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameLive extends AppCompatActivity implements RecognitionListener {
     private String TAG = "TEST";
@@ -48,7 +55,9 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     DBHandler db = new DBHandler(this);
     DBGames dbGames = new DBGames(this);
 
-
+    //bluetooth
+    private static final String TAG1 = "MainActivity";
+    BluetoothAdapter mBlueToothAdapter;
 
     private Chronometer myTimeCount;
     private long lastPause;
@@ -110,6 +119,58 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
     int rivalFirstPercentageWon;
     int rivalSecondPercentageWon;
 
+    MediaPlayer myPointSound;
+    MediaPlayer rivalPointSound;
+    MediaPlayer to;
+
+    //create broadcast
+    private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            //when find
+            if (action.equals(mBlueToothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, mBlueToothAdapter.ERROR);
+
+                switch(state){
+                    case BluetoothAdapter.STATE_OFF:
+                        Log.d(TAG1, "on recieve: STATE OFF");
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        Log.d(TAG1, "mBroadcastReceiver1: STATE TURNING OFF");
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        Log.d(TAG1, "mBroadcastReciever1: STATE ON");
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        Log.d(TAG1, "mBroadcastReceiver1: STATE TURNING ON");
+                        break;
+                }
+            }
+        }
+    };
+
+    public void enableDisableBT() {
+        if(mBlueToothAdapter == null) {
+            Log.d(TAG1, "enableDisableBT: Does not have bluetooth capabilties");
+        }
+        if (!mBlueToothAdapter.isEnabled()){
+            Log.d (TAG1, "enableDisableBT: enable");
+            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(enableBTIntent);
+
+            IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(mBroadcastReceiver1, BTIntent);
+        }
+        if (mBlueToothAdapter.isEnabled()) {
+            Log.d (TAG1, "enableDisableBT: disable");
+            mBlueToothAdapter.disable();
+
+            IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+            registerReceiver(mBroadcastReceiver1, BTIntent);
+        }
+    }
+
 
     public void startGame (View view) {
         //check if play or pause
@@ -166,8 +227,6 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                     public void onClick(DialogInterface dialog, int id) {
                         sendTimeGame();
                         dbGames.addMyGameStats(new GamesSQL(calc.updateGameSQL(), time));
-                        //Tab1MyProfile tab1 = new Tab1MyProfile();
-                        //tab1.update();
                         db.deleteDb();
                         finish();
                     }
@@ -282,8 +341,16 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
         checkIfServeStatus(s);
         gamePoints(s);
         netWon(s);
-        checkServeWon();
-        speech.startListening(intent);
+        //checkServeWon();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("wait 5 seconds", "before start again");
+                speech.startListening(intent);
+            }
+        }, 5000);
+
     }
 
     public void ononDestroy() {
@@ -330,6 +397,224 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
 
     }
 
+    public MediaPlayer checkSoundByMyPointNumber (int myPoint, MediaPlayer sounds[]){
+        if (myPoint==0){
+            Log.i("enter sound my 0","enter");
+            myPointSound=getSound(0,sounds);
+            //myPointSound=sm[0];
+        }
+        if (myPoint==15){
+            Log.i("enter sound my 15","enter");
+            myPointSound=getSound(1,sounds);
+        }
+        if (myPoint==30){
+            Log.i("enter sound my 30","enter");
+            myPointSound=getSound(2,sounds);
+        }
+        if (myPoint==40){
+            Log.i("enter sound my 40","enter");
+            myPointSound=getSound(3,sounds);
+        }
+        if (myPoint==45){
+            Log.i("enter sound my A","enter");
+            myPointSound=getSound(4,sounds);
+        }
+
+        return myPointSound;
+
+    }
+
+    public MediaPlayer checkSoundByRivalPointNumber (int rivalPoint, MediaPlayer sounds[]){
+        if (rivalPoint==0){
+            Log.i("enter sound rival 0","enter");
+            rivalPointSound=getSound(0,sounds);
+        }
+        if (rivalPoint==15){
+            Log.i("enter sound rival 15","enter");
+            rivalPointSound=getSound(1,sounds);
+        }
+        if (rivalPoint==30){
+            Log.i("enter sound rival 30","enter");
+            rivalPointSound=getSound(2,sounds);
+        }
+        if (rivalPoint==40){
+            Log.i("enter sound rival 40","enter");
+            rivalPointSound=getSound(3,sounds);
+        }
+        if (rivalPoint==45){
+            Log.i("enter sound rival A","enter");
+            rivalPointSound=getSound(4,sounds);
+        }
+
+        return rivalPointSound;
+
+    }
+
+    public MediaPlayer getSound(int index, MediaPlayer mp[]){
+        MediaPlayer mySound;
+        mySound = mp[index];
+        return mySound;
+
+    }
+
+    public MediaPlayer [] createMyArraySoundsPoints(){
+        MediaPlayer mp1 = MediaPlayer.create(getApplicationContext(),R.raw.love);
+        MediaPlayer mp2 = MediaPlayer.create(getApplicationContext(),R.raw.fifteen);
+        MediaPlayer mp3 = MediaPlayer.create(getApplicationContext(),R.raw.thirty);
+        MediaPlayer mp4 = MediaPlayer.create(getApplicationContext(),R.raw.fourty);
+        MediaPlayer mp5 = MediaPlayer.create(getApplicationContext(),R.raw.my_a);
+
+
+        MediaPlayer []sounds = new MediaPlayer[]{mp1, mp2, mp3, mp4, mp5};
+
+        return sounds;
+    }
+
+    public MediaPlayer [] createRivalArraySoundsPoints(){
+        MediaPlayer mp1 = MediaPlayer.create(getApplicationContext(),R.raw.love);
+        MediaPlayer mp2 = MediaPlayer.create(getApplicationContext(),R.raw.fifteen);
+        MediaPlayer mp3 = MediaPlayer.create(getApplicationContext(),R.raw.thirty);
+        MediaPlayer mp4 = MediaPlayer.create(getApplicationContext(),R.raw.fourty);
+        MediaPlayer mp5 = MediaPlayer.create(getApplicationContext(),R.raw.rival_a);
+
+
+        MediaPlayer []sounds = new MediaPlayer[]{mp1, mp2, mp3, mp4, mp5};
+
+        return sounds;
+    }
+
+    public void soundScore(){
+        Log.i("enter sound points","enter");
+        final MediaPlayer []rivalSounds = createRivalArraySoundsPoints();
+        final MediaPlayer []mySounds = createMyArraySoundsPoints();
+
+
+        final int myPoint = calc.getMyGamePoint();
+        final int rivalPoint = calc.getRivalGamePoint();
+
+
+        if (flagMyFirst==true||flagMySecond==true) {
+            if ((myPoint != 45 && rivalPoint != 45) && (myPoint != 0 || rivalPoint != 0)) {
+                myPointSound = checkSoundByMyPointNumber(myPoint, mySounds);
+                myPointSound.start();
+                Log.i("enter sounding my point", "enter");
+                myPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        myPointSound.release();
+                        rivalPointSound = checkSoundByRivalPointNumber(rivalPoint, rivalSounds);
+                        rivalPointSound.start();
+                        Log.i("enter sounding rival", " point enter");
+                        rivalPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            public void onCompletion(MediaPlayer mp) {
+                                rivalPointSound.release();
+                                Log.i("enter sounding rival", " release");
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (myPoint == 45) {
+                myPointSound = checkSoundByMyPointNumber(myPoint, mySounds);
+                myPointSound.start();
+                myPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        myPointSound.release();
+                        Log.i("enter sounding rival", " release");
+                    }
+                });
+                Log.i("enter sounding my point", "enter");
+            }
+
+            if (rivalPoint == 45) {
+                rivalPointSound = checkSoundByRivalPointNumber(rivalPoint, rivalSounds);
+                rivalPointSound.start();
+                rivalPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        rivalPointSound.release();
+                        Log.i("enter sounding rival", " release");
+                    }
+                });
+                Log.i("enter sounding rival", " point enter");
+            }
+
+            if (myPoint == 0 && rivalPoint == 0) {
+                final MediaPlayer EndGameSound = MediaPlayer.create(getApplicationContext(), R.raw.new_game);
+                EndGameSound.start();
+                EndGameSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        EndGameSound.release();
+                    }
+                });
+                Log.i("enter sounding game end", " enter");
+            }
+
+            checkServeWon();
+        }
+
+        if (flagRivalFirst==true||flagRivalSecond==true) {
+            if ((myPoint != 45 && rivalPoint != 45) && (myPoint != 0 || rivalPoint != 0)) {
+                rivalPointSound = checkSoundByRivalPointNumber(rivalPoint, mySounds);
+                rivalPointSound.start();
+                Log.i("enter sounding my point", "enter");
+                rivalPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        rivalPointSound.release();
+                        myPointSound = checkSoundByMyPointNumber(myPoint, rivalSounds);
+                        myPointSound.start();
+                        Log.i("enter sounding rival", " point enter");
+                        myPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            public void onCompletion(MediaPlayer mp) {
+                                myPointSound.release();
+                                Log.i("enter sounding rival", " release");
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (myPoint == 45) {
+                myPointSound = checkSoundByMyPointNumber(myPoint, mySounds);
+                myPointSound.start();
+                myPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        myPointSound.release();
+                        Log.i("enter sounding rival", " release");
+                    }
+                });
+                Log.i("enter sounding my point", "enter");
+            }
+
+            if (rivalPoint == 45) {
+                rivalPointSound = checkSoundByRivalPointNumber(rivalPoint, rivalSounds);
+                rivalPointSound.start();
+                rivalPointSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        rivalPointSound.release();
+                        Log.i("enter sounding rival", " release");
+                    }
+                });
+                Log.i("enter sounding rival", " point enter");
+            }
+
+            if (myPoint == 0 && rivalPoint == 0) {
+                final MediaPlayer EndGameSound = MediaPlayer.create(getApplicationContext(), R.raw.new_game);
+                EndGameSound.start();
+                EndGameSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        EndGameSound.release();
+                    }
+                });
+                Log.i("enter sounding game end", " enter");
+            }
+
+            checkServeWon();
+        }
+
+
+    }
+
+
     //check if user won or lost the point, check if it winner/forced/ace..., count those results in the database
     // and show the results to the user
     public void gamePoints(String s) {
@@ -337,73 +622,168 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 (s.contains("ace")||s.contains("ice")||s.contains("ase"))){
             myAcesViewId.setText(Integer.toString(calc.addMyAces()));
             updateMyScore();
+            final MediaPlayer myAceSound = MediaPlayer.create(getApplicationContext(), R.raw.your_ace);
+            myAceSound.start();
+            myAceSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    myAceSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = true;
             flagMyLostPoint = false;
+
+            Log.i("enter my ace","enter");
         }
-        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
+        else if ((s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")||s.contains("appo"))&&
                 (s.contains("ace")||s.contains("ice")||s.contains("ase"))){
             rivalAcesViewId.setText(Integer.toString(calc.addRivalAces()));
             updateRivalScore();
+            final MediaPlayer oppoAceSound = MediaPlayer.create(getApplicationContext(), R.raw.oppo_ace);
+            oppoAceSound.start();
+            oppoAceSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    oppoAceSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = false;
             flagMyLostPoint = true;
+            Log.i("enter opo ace","enter");
         }
-        if ((s.contains("my")||s.contains("ma"))&&
+        else if ((s.contains("my")||s.contains("ma"))&&
                 (s.contains("do")||s.contains("du")||s.contains("dev"))){
             myDoublesViewId.setText(Integer.toString(calc.addMyDoubles()));
             updateRivalScore();
+            final MediaPlayer myDoubleSound = MediaPlayer.create(getApplicationContext(), R.raw.your_double);
+            myDoubleSound.start();
+            myDoubleSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    myDoubleSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = false;
             flagMyLostPoint = true;
+            Log.i("enter my double","enter");
         }
-        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
+        else if ((s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")||s.contains("appo"))&&
                 (s.contains("do")||s.contains("du")||s.contains("dev"))){
             rivalDoublesViewId.setText(Integer.toString(calc.addRivalDoubles()));
             updateMyScore();
+            final MediaPlayer oppoDoubleSound = MediaPlayer.create(getApplicationContext(), R.raw.oppo_double);
+            oppoDoubleSound.start();
+            oppoDoubleSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    oppoDoubleSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = true;
             flagMyLostPoint = false;
+            Log.i("enter opo double","enter");
         }
-        if ((s.contains("my")||s.contains("ma"))&& (s.contains("win")||s.contains("wie"))){
+        else if ((s.contains("my")||s.contains("ma"))&&
+                (s.contains("win")||s.contains("wie"))){
             myWinnerViewId.setText(Integer.toString(calc.addMyWinners()));
             updateMyScore();
+            final MediaPlayer myWinnerSound = MediaPlayer.create(getApplicationContext(), R.raw.your_winner);
+            myWinnerSound.start();
+            Log.i("flagMyfirst gamePoint", Boolean.toString(flagMyFirst));
+            myWinnerSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    myWinnerSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = true;
             flagMyLostPoint = false;
+            Log.i("enter my winner","enter");
         }
-        if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
+        else if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
              (s.contains("fau")||s.contains("for")) &&
              (!s.contains("on")&&!s.contains("un")&&!s.contains("own")&&!s.contains("ya")) ){
             myForcedViewId.setText(Integer.toString(calc.addMyForced()));
             updateRivalScore();
+            final MediaPlayer myForcedSound = MediaPlayer.create(getApplicationContext(), R.raw.your_forced);
+            myForcedSound.start();
+            myForcedSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    myForcedSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = false;
             flagMyLostPoint = true;
+            Log.i("enter my forced","enter");
         }
-        if ((s.contains("my")||s.contains("ma"))&&
+        else if ((s.contains("my")||s.contains("ma"))&&
                 (s.contains("un")||s.contains("own")||s.contains("ton"))){
             myUnforcedViewId.setText(Integer.toString(calc.addMyUNForced()));
             updateRivalScore();
+            final MediaPlayer myUnforcedSound = MediaPlayer.create(getApplicationContext(), R.raw.your_unforced);
+            myUnforcedSound.start();
+            myUnforcedSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    myUnforcedSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = false;
             flagMyLostPoint = true;
+            Log.i("enter my unforced","enter");
         }
-        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
+        else if ((s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")||s.contains("appo"))&&
                 (s.contains("win")||s.contains("wie")) ){
             rivalWinnerViewId.setText(Integer.toString(calc.addRivalWinners()));
             updateRivalScore();
+            final MediaPlayer oppoWinnerSound = MediaPlayer.create(getApplicationContext(), R.raw.oppo_winner);
+            oppoWinnerSound.start();
+            oppoWinnerSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    oppoWinnerSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = false;
             flagMyLostPoint = true;
+            Log.i("enter opo winner","enter");
         }
-        if ((s.contains("ri")||s.contains("su")||s.contains("li")||s.contains("rh"))&&
-                (s.contains("fa")||s.contains("for")||s.contains("fr")) &&
-                (!s.contains("on")&&!s.contains("un")&&!s.contains("own")&&!s.contains("ya")&&!s.contains("and")) ){
-            rivalForcedViewId.setText(Integer.toString(calc.addRivalForced()));
-            updateMyScore();
-            flagMyWonPoint = true;
-            flagMyLostPoint = false;
-        }
-        if ((s.contains("ri")||s.contains("su")||s.contains("li"))&&
-                (s.contains("un")||s.contains("own")||s.contains("ton")||s.contains("and")) ){
+        //opo unforced(change places with opo forced beacause abundant word)
+        else if ((s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")||s.contains("appo"))&&
+                (s.contains("unfor")||s.contains("enfor")||s.contains("t and for")||s.contains("on for"))){
             rivalUnforcedViewId.setText(Integer.toString(calc.addRivalUNForced()));
             updateMyScore();
+            final MediaPlayer oppoUNForcedSound = MediaPlayer.create(getApplicationContext(), R.raw.oppo_unforced);
+            oppoUNForcedSound.start();
+            oppoUNForcedSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    oppoUNForcedSound.release();
+                    soundScore();
+                }
+            });
             flagMyWonPoint = true;
             flagMyLostPoint = false;
+            Log.i("enter opo unforced","enter");
         }
+        //opo forced
+        else if ((s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")||s.contains("appo"))&&
+                (s.contains("fa")||s.contains("for")||s.contains("fr"))  ){
+            rivalForcedViewId.setText(Integer.toString(calc.addRivalForced()));
+            updateMyScore();
+            final MediaPlayer oppoForcedSound = MediaPlayer.create(getApplicationContext(), R.raw.oppo_forced);
+            oppoForcedSound.start();
+            oppoForcedSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    oppoForcedSound.release();
+                    soundScore();
+                }
+            });
+            flagMyWonPoint = true;
+            flagMyLostPoint = false;
+            Log.i("enter opo forced","enter");
+        }
+
     }
 
     //check if the user or rival made net and the result depend if won or lost the point
@@ -416,7 +796,7 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 calc.addMyNet();
             }
         }
-        if ( (s.contains("ri")||s.contains("su")||s.contains("li")) &&
+        if ( (s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")) &&
                 (s.contains("net"))) {
             calc.addRivalTotalNet();
             if (flagMyLostPoint==true){
@@ -436,21 +816,52 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                 (s.contains("1")||s.contains("one"))){
             flagMyFirst = true;
             flagMySecond = false;
+            Log.i("flagMyfirst ServeStatus", Boolean.toString(flagMyFirst));
+            final MediaPlayer myFirstServeSound = MediaPlayer.create(getApplicationContext(), R.raw.your_first_serve);
+            myFirstServeSound.start();
+            myFirstServeSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    myFirstServeSound.release();
+                }
+            });
         }
         if ( (s.contains("my")||s.contains("ma")||s.contains("mi")) &&
                 (s.contains("sec")||s.contains("2"))) {
             flagMyFirst = false;
             flagMySecond = true;
+            final MediaPlayer mySecondServeSound = MediaPlayer.create(getApplicationContext(), R.raw.your_second_serve);
+            mySecondServeSound.start();
+            mySecondServeSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    mySecondServeSound.release();
+                }
+            });
         }
-        if ( (s.contains("ri")||s.contains("su")||s.contains("li")) &&
-                (s.contains("1")||s.contains("one"))){
+        if ( (s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")||s.contains("appo")) &&
+                (s.contains("1"))&&
+                (!s.contains("1st")) ){
             flagRivalFirst = true;
             flagRivalSecond = false;
+            Log.i("what", "inside first serve voice:"+s);
+            final MediaPlayer oppoFirstServeSound = MediaPlayer.create(getApplicationContext(), R.raw.oppo_first_serve);
+            oppoFirstServeSound.start();
+            oppoFirstServeSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    oppoFirstServeSound.release();
+                }
+            });
         }
-        if ( (s.contains("ri")||s.contains("su")||s.contains("li")) &&
+        if ( (s.contains("opa")||s.contains("opo")||s.contains("oppo")||s.contains("fun")||s.contains("appo")) &&
                 (s.contains("sec")||s.contains("2"))) {
             flagRivalFirst = false;
             flagRivalSecond = true;
+            final MediaPlayer oppoSecondServeSound = MediaPlayer.create(getApplicationContext(), R.raw.oppo_second_serve);
+            oppoSecondServeSound.start();
+            oppoSecondServeSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    oppoSecondServeSound.release();
+                }
+            });
         }
     }
 
@@ -506,8 +917,10 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             Log.i("serves", "won point && myFirst");
             countMyFirst = calc.addMyFirst();
             countMyTotalFirst = calc.addMyTotalFirst();
+            Log.i("flagMyfirst ServeWon", Boolean.toString(flagMyFirst));
             editServesStatus();
             zeroFlags();
+            Log.i("flagMy ServeStatusZero", Boolean.toString(flagMyFirst));
         }
 
         if (flagMyLostPoint == true && flagMyFirst == true) {
@@ -613,9 +1026,6 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
                FirebaseGame game = new FirebaseGame();
                game.createNewGame();
                startGame(view);
-
-
-
             }
         });
 
@@ -679,8 +1089,15 @@ public class GameLive extends AppCompatActivity implements RecognitionListener {
             }
         });
 
-
-
+        //bluetooth
+        Button btnOnOff = (Button) findViewById(R.id.btnOnOff);
+        mBlueToothAdapter = BluetoothAdapter.getDefaultAdapter();
+        btnOnOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                enableDisableBT();
+            }
+        });
     }
 
 }

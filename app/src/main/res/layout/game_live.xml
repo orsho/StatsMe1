@@ -491,12 +491,24 @@
         app:layout_constraintTop_toBottomOf="@+id/gridLayoutScore">
 
 
+        <Button
+            android:id="@+id/btnOnOff"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/color5"
+            android:adjustViewBounds="true"
+            android:text="BT"
+            android:scaleType="fitCenter"/>
+
         <ImageButton
             android:id="@+id/btnPlayGame"
             android:layout_width="110dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="30dp"
             android:onClick="start"
             android:background="@color/color3"
             android:adjustViewBounds="true"
@@ -508,7 +520,7 @@
             android:layout_width="110dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="30dp"
             android:onClick="pause"
             android:background="@color/color3"
             android:adjustViewBounds="true"

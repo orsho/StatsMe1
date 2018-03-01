@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="three sets"
+        android:entries="@array/setsNumber"
+        android:entryValues="@array/setsNumber"
+        android:title="Number of Sets"
+        android:key="sets number"/>
+
+    <SwitchPreference
+        android:title="Tiebreak"
+        android:key="switch tiebreak"
+        android:defaultValue="true"/>
+
+    <SwitchPreference
+        android:title="Game sound"
+        android:key="switch sound"
+        android:defaultValue="true"/>
+
+    <ListPreference
+        android:defaultValue="asphalt"
+        android:entries="@array/surface"
+        android:entryValues="@array/surface"
+        android:title="Surface"
+        android:key="surface"/>
+
+</PreferenceScreen>

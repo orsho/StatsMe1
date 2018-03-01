@@ -45,6 +45,18 @@
             android:name=".Tab4About"
             android:theme="@style/AppTheme">
         </activity>
+        <activity
+            android:name=".Tab4ContactUs"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".Tab4EditProfile"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".Tab4GameRules"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>

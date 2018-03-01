@@ -8,4 +8,16 @@
 
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string-array name="setsNumber">
+        <item>one set</item>
+        <item>three sets</item>
+        <item>five sets</item>
+    </string-array>
+
+    <string-array name="surface">
+        <item>asphalt</item>
+        <item>grass</item>
+        <item>clay</item>
+    </string-array>
 </resources>
