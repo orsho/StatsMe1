@@ -97,21 +97,25 @@ public class MainActivity extends AppCompatActivity {
             handleIllegalEmail();
             return;
         }
-        (firebaseAuth.signInWithEmailAndPassword(username.getText().toString(), password.getText().toString()))
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.i("signin", "successful");
-                            Intent i = new Intent(MainActivity.this, StartActivity.class);
-                            i.putExtra("Email",firebaseAuth.getCurrentUser().getEmail());
-                            startActivity(i);
-                        } else {
-                            Log.e("LoginERROR", task.getException().toString());
-                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+        try {
+            (firebaseAuth.signInWithEmailAndPassword(username.getText().toString(), password.getText().toString()))
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.i("signin", "successful");
+                                Intent i = new Intent(MainActivity.this, StartActivity.class);
+                                i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
+                                startActivity(i);
+                            } else {
+                                Log.e("LoginERROR", task.getException().toString());
+                                Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        } catch (NullPointerException e){
+            Log.e("LoginERROR","Error occurred in the login process: " + e.getMessage());
+        }
     }
 
     private void handleIllegalEmail() {
