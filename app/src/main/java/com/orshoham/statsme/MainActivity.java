@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         }
 
-        setTitle("Wellcome to StatsMe");
+        setTitle("Welcome to StatsMe");
 
        // Intent i = new Intent(MainActivity.this, StartActivity.class);
        // startActivity(i);
