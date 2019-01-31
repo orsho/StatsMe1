@@ -66,22 +66,25 @@ public class MainActivity extends AppCompatActivity {
         if (username.getText().toString().matches("") || password.getText().toString().matches("")) {
             handleEmptyInputs();
         } else {
+            try {
+                (firebaseAuth.createUserWithEmailAndPassword(username.getText().toString(), password.getText().toString()))
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-            (firebaseAuth.createUserWithEmailAndPassword(username.getText().toString(), password.getText().toString()))
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                   @Override
-                   public void onComplete(@NonNull Task<AuthResult> task) {
-
-                       if (task.isSuccessful()) {
-                           Log.i("signup", "successful");
-                           Intent i = new Intent(MainActivity.this, StartActivity.class);
-                           startActivity(i);
-                       } else {
-                           Log.e("SignupERROR", task.getException().toString());
-                           Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                       }
-                   }
-            });
+                                if (task.isSuccessful()) {
+                                    Log.i("signup", "successful");
+                                    Intent i = new Intent(MainActivity.this, StartActivity.class);
+                                    startActivity(i);
+                                } else {
+                                    Log.e("SignupERROR", task.getException().toString());
+                                    Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            } catch (NullPointerException e){
+                Log.e("LoginERROR","Error occurred in the sign up process: " + e.getMessage());
+            }
 
         }
     }
