@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/color3"
-    tools:context="com.orshoham.statsme.Tab4EditProfile">
+    tools:context="com.orshoham.statsme.tab4.Tab4EditProfile">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"

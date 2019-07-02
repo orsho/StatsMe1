@@ -60,12 +60,12 @@ public class FirebaseGame extends AppCompatActivity {
         mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                String countToString = snapshot.getValue().toString();
-                int countToInt = Integer.parseInt(countToString);
-                countToInt++;
-                String countToStringAgain = Integer.toString(countToInt);
-                mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").setValue(countToStringAgain);
-                Log.i("numGames in Firebase", countToStringAgain);
+                //String countToString = snapshot.getValue().toString();
+                //int countToInt = Integer.parseInt(countToString);
+                //countToInt++;
+                //String countToStringAgain = Integer.toString(countToInt);
+                //mref.child("Users/"+userID+"/UserDetails/NumOfGamesPlayed").setValue(countToStringAgain);
+                //Log.i("numGames in Firebase", countToStringAgain);
                 //GamesSQL oneGame = new GamesSQL(countToInt);
                 //Log.i("numGame in GameSQl", Integer.toString(oneGame.getGamesNumber()));
             }

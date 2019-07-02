@@ -1,4 +1,4 @@
-package com.orshoham.statsme;
+package com.orshoham.statsme.tab4;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.orshoham.statsme.R;
+import com.orshoham.statsme.Tab1MyProfile;
 
 public class Tab4EditProfile extends AppCompatActivity {
 

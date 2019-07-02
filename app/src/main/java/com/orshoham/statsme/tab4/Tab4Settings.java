@@ -1,7 +1,6 @@
-package com.orshoham.statsme;
+package com.orshoham.statsme.tab4;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -11,13 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.orshoham.statsme.MainActivity;
+import com.orshoham.statsme.R;
 
 public class Tab4Settings extends Fragment {
 

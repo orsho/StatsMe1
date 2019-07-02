@@ -406,7 +406,7 @@ public class Tab1MyProfile extends Fragment  {
         avgUNForcedView = (TextView) rootView.findViewById(R.id.profile_stats5);
         avgUNForcedView.setText("AVG UF PG: "+ Integer.toString(mainStats.avgUNForcedPG(dbGames)));
         avgAcesView = (TextView) rootView.findViewById(R.id.profile_stats6);
-        avgAcesView.setText("AVG UF PG: "+ Integer.toString(mainStats.avgAcesPG(dbGames)));
+        avgAcesView.setText("AVG ACE PG: "+ Integer.toString(mainStats.avgAcesPG(dbGames)));
 
 
 

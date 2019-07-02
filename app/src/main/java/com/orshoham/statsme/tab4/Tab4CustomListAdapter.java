@@ -1,4 +1,4 @@
-package com.orshoham.statsme;
+package com.orshoham.statsme.tab4;
 
 
 import android.app.Activity;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.orshoham.statsme.R;
 
 public class Tab4CustomListAdapter extends ArrayAdapter<String> {
     private final Activity context;

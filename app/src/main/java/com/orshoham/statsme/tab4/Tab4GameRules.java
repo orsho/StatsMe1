@@ -1,10 +1,12 @@
-package com.orshoham.statsme;
+package com.orshoham.statsme.tab4;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
+
+import com.orshoham.statsme.R;
 
 public class Tab4GameRules extends AppCompatActivity {
 
