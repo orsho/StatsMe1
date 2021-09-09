@@ -5,4 +5,7 @@
 * It is required to use smartwatch and bluetooth during the game that picks up the words spoken and analyzes them
 * The app uses Google's voice recognition API combined with tailor made algorithm for better word understanding
 
-<img src="https://github.com/orsho/StatsMe1/blob/master/other%20things/home_.JPG" width="200" height="300">
+<img src="https://github.com/orsho/StatsMe1/blob/master/other%20things/home_.JPG" width="230" height="300">
+
+<img src="https://github.com/orsho/StatsMe1/blob/master/other%20things/game_.JPG" width="230" height="300">
+
